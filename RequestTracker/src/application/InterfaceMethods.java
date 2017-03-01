@@ -24,30 +24,32 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+/**
+ * The Class InterfaceMethods.
+ * Assigns methods to various interface nodes in the program.
+ * They were moved here to improve code readability and 
+ * maintainability.
+ * 
+ * @author Chaz-Rae L. Moncrieffe
+ * @since 3/1/2017
+ */
 /*
- * Table of Contents
- * 
- * This class assigns methods to various interface nodes in the program.
- * They were moved here to improve code readability.
- * 
+ * Table of Contents 
  *	1.0 MenuItems and Toolbar Buttons
- *		1.1 New Request MenuItem
- *		1.2 New Request Toolbar Button
- *		1.3 New Tech MenuItem
- *		1.4 New Tech Toolbar Button
- *		1.5 Print All Requests MenuItem
- *		1.6 Print All Requests Toolbar Button
- *		1.7 Print Open Requests MenuItem
- *		1.8 Print Open Request Toolbar Button
- *		1.9 Print Closed Requests MenuItem
- *		1.10 Print Closed Requests Toolbar Button
- *		1.11 Print All Techs MenuItem
- *		1.12 Print All Techs Toolbar Button
- *		1.13 About MenuItem
- *		1.14 Exit MenuItem
+ *		1.1 New Request
+ *		1.2 New Tech
+ *		1.3 Print All Requests
+ *		1.4 Print Open Requests
+ *		1.5 Print Closed Requests
+ *		1.6 Print All Techs
+ *		1.7 About MenuItem
+ *		1.8 Exit MenuItem
+ *		1.9 Delete All Requests
+ *		1.10 Delete All Technicians
  *	2.0 Form Buttons
  *		2.1 Save Request Changes
  *		2.2 Save Tech Changes
@@ -71,221 +73,277 @@ import javafx.util.Callback;
  *		5.5 Tech Name Column
  *		5.6 Notes Column
  *		5.7 Is Completed Column
- *		5.8 Technician ListView		
- *	6.0 Private Helper Functions
- *		6.1 Save File
+ *		5.8 Request Id Column
+ *		5.9 Technician ListView		
+ *		5.10 First Name Column
+ *		5.11 Last Name Column
+ *		5.12 ID Number Column
+ *	6.0 Add TableColumns to TableView
+ *		6.1 Add Request Columns
+ *		6.2 Add Technician Columns
+ *	7.0 Private Helper Functions
+ *		7.1 Save File
  */
 public class InterfaceMethods {
-	/************ 1.0 MenuItems and Toolbar Buttons ************/
-	// 1.1 New Request MenuItem
-	public void mniNewRequest(MenuItem mni, Stage stage, TableView<Request> tbvR, RequestList rList){
-		mni.setOnAction(e -> {
-			try {
-				WindowCreateRequest createWindow = new WindowCreateRequest(stage);
-				createWindow.Show();
-				tbvR.setItems(rList.getAll());
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-			
-		});
-	}
-	
-	// 1.2 New Request Toolbar Button
-	public void mniNewRequest(Button btn, Stage stage, TableView<Request> tbvR, RequestList rList){
-		btn.setOnAction(e -> {
-			try {
-				WindowCreateRequest createWindow = new WindowCreateRequest(stage);
-				createWindow.Show();
-				tbvR.setItems(rList.getAll());
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-			
-		});
-	}
-	
-	// 1.3 New Tech MenuItem
-	public void mniNewTech(MenuItem mni, Stage stage, TableView<Technician> tbvT, ListView<Technician> lsvT, TechnicianList tList){
-		mni.setOnAction(e -> {
-			try {
-				WindowCreateTechnician createWindow = new WindowCreateTechnician(stage);
-				createWindow.Show();
-				tbvT.setItems(tList.getAll());
-				lsvT.setItems(tList.getAll());
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-		});
-	}
-	
-	// 1.4 New Tech Toolbar Button
-	public void mniNewTech(Button btn, Stage stage, TableView<Technician> tbvT, ListView<Technician> lsvT, TechnicianList tList){
-		btn.setOnAction(e -> {
-			try {
-				WindowCreateTechnician createWindow = new WindowCreateTechnician(stage);
-				createWindow.Show();
-				tbvT.setItems(tList.getAll());
-				lsvT.setItems(tList.getAll());
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-		});
-	}
-	
-	// 1.5 Print All Requests MenuItem
-	public void mniPrintAllRequests(MenuItem mni, RequestFileChooser fch, Stage stage, RequestList rList){
-		mni.setOnAction(e -> {
-			try{
-				fch.setTitle("Save All Requests");
-				fch.setInitialFileName("all_requests");
-				
-				File file = fch.showSaveDialog(stage);
-				if(file != null){
-					SaveFile(rList.printAllRequests(), file);
+	/********** 1.0 MenuItems and Toolbar Buttons ***********/
+	/**
+	 * 1.1 New Request
+	 * 
+	 * @param obj the Object
+	 * @param stage the Stage
+	 * @param tbvR the TableView
+	 * @param rList the RequestList
+	 */
+	public void objNewRequest(Object obj, Stage stage, TableView<Request> tbvR, RequestList rList){
+		if(obj.getClass() == Button.class){
+			((Button)obj).setOnAction(e -> {
+				try {
+					WindowCreateRequest createWindow = new WindowCreateRequest(stage);
+					createWindow.Show();
+					tbvR.setItems(rList.getAll());
+				} catch (Exception e1) {
+					e1.printStackTrace();
 				}
-			}
-			catch(Exception e1){
-				e1.printStackTrace();
-			}
-			
-		});
-	}
-	
-	// 1.6 Print All Requests Toolbar Button
-	public void mniPrintAllRequests(Button btn, RequestFileChooser fch, Stage stage, RequestList rList){
-		btn.setOnAction(e -> {
-			try{
-				fch.setTitle("Save All Requests");
-				fch.setInitialFileName("all_requests");
 				
-				File file = fch.showSaveDialog(stage);
-				if(file != null){
-					SaveFile(rList.printAllRequests(), file);
+			});
+		}
+		else if(obj.getClass() == MenuItem.class){
+			((MenuItem)obj).setOnAction(e -> {
+				try {
+					WindowCreateRequest createWindow = new WindowCreateRequest(stage);
+					createWindow.Show();
+					tbvR.setItems(rList.getAll());
+				} catch (Exception e1) {
+					e1.printStackTrace();
 				}
-			}
-			catch(Exception e1){
-				e1.printStackTrace();
-			}
-			
-		});
-	}
-	
-	// 1.7 Print Open Requests MenuItem
-	public void mniPrintOpenRequests(MenuItem mni, RequestFileChooser fch, Stage stage, RequestList rList){
-		mni.setOnAction(e -> {
-			try{
-				fch.setTitle("Save Open Requests");
-				fch.setInitialFileName("all_open_requests");
 				
-				File file = fch.showSaveDialog(stage);
-				if(file != null){
-					SaveFile(rList.printOpenRequests(), file);
-				}
-			}
-			catch(Exception e1){
-				e1.printStackTrace();
-			}
-			
-		});
+			});
+		}
 	}
 	
-	// 1.8 Print Open Request Toolbar Button
-	public void mniPrintOpenRequests(Button btn, RequestFileChooser fch, Stage stage, RequestList rList){
-		btn.setOnAction(e -> {
-			try{
-				fch.setTitle("Save Open Requests");
-				fch.setInitialFileName("all_open_requests");
+	/**
+	 * 1.2 New Tech
+	 *
+	 * @param obj the Object
+	 * @param stage the Stage
+	 * @param tbvT the TableView
+	 * @param lsvT the ListView
+	 * @param tList the TechnicianList
+	 */
+	public void objNewTech(Object obj, Stage stage, TableView<Technician> tbvT, ListView<Technician> lsvT, TechnicianList tList){
+		if(obj.getClass() == Button.class){
+			((Button)obj).setOnAction(e -> {
+				try {
+					WindowCreateTechnician createWindow = new WindowCreateTechnician(stage);
+					createWindow.Show();
+					tbvT.setItems(tList.getAll());
+					lsvT.setItems(tList.getAll());
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			});
+		}
+		else if(obj.getClass() == MenuItem.class){
+			((MenuItem)obj).setOnAction(e -> {
+				try {
+					WindowCreateTechnician createWindow = new WindowCreateTechnician(stage);
+					createWindow.Show();
+					tbvT.setItems(tList.getAll());
+					lsvT.setItems(tList.getAll());
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			});
+		}
+	}
+	
+	/**
+	 * 1.3 Print All Requests.
+	 *
+	 * @param obj the Object
+	 * @param fch the RequestFileChooser
+	 * @param stage the Stage
+	 * @param rList the RequestList
+	 */
+	public void objPrintAllRequests(Object obj, RequestFileChooser fch, Stage stage, RequestList rList){
+		if(obj.getClass() == Button.class){
+			((Button)obj).setOnAction(e -> {
+				try{
+					fch.setTitle("Save All Requests");
+					fch.setInitialFileName("all_requests");
+					
+					File file = fch.showSaveDialog(stage);
+					if(file != null){
+						SaveFile(rList.printAllRequests(), file);
+					}
+				}
+				catch(Exception e1){
+					e1.printStackTrace();
+				}
 				
-				File file = fch.showSaveDialog(stage);
-				if(file != null){
-					SaveFile(rList.printOpenRequests(), file);
+			});
+		}
+		else if(obj.getClass() == MenuItem.class){
+			((MenuItem)obj).setOnAction(e -> {
+				try{
+					fch.setTitle("Save All Requests");
+					fch.setInitialFileName("all_requests");
+					
+					File file = fch.showSaveDialog(stage);
+					if(file != null){
+						SaveFile(rList.printAllRequests(), file);
+					}
 				}
-			}
-			catch(Exception e1){
-				e1.printStackTrace();
-			}
-			
-		});
-	}
-	
-	// 1.9 Print Closed Requests MenuItem
-	public void mniPrintClosedRequests(MenuItem mni, RequestFileChooser fch, Stage stage, RequestList rList){
-		mni.setOnAction(e -> {
-			try{
-				fch.setTitle("Save Closed Requests");
-				fch.setInitialFileName("all_closed_requests");
+				catch(Exception e1){
+					e1.printStackTrace();
+				}
 				
-				File file = fch.showSaveDialog(stage);
-				if(file != null){
-					SaveFile(rList.printClosedRequests(), file);
-				}
-			}
-			catch(Exception e1){
-				e1.printStackTrace();
-			}
-			
-		});
+			});
+		}
 	}
 	
-	// 1.10 Print Closed Requests Toolbar Button
-	public void mniPrintClosedRequests(Button btn, RequestFileChooser fch, Stage stage, RequestList rList){
-		btn.setOnAction(e -> {
-			try{
-				fch.setTitle("Save Closed Requests");
-				fch.setInitialFileName("all_closed_requests");
+	/**
+	 * 1.4 Print Open Requests.
+	 *
+	 * @param obj the Object
+	 * @param fch the RequestFileChoosed
+	 * @param stage the Stage
+	 * @param rList the RequestList
+	 */
+	public void objPrintOpenRequests(Object obj, RequestFileChooser fch, Stage stage, RequestList rList){
+		if(obj.getClass() == Button.class){
+			((Button)obj).setOnAction(e -> {
+				try{
+					fch.setTitle("Save Open Requests");
+					fch.setInitialFileName("all_open_requests");
+					
+					File file = fch.showSaveDialog(stage);
+					if(file != null){
+						SaveFile(rList.printOpenRequests(), file);
+					}
+				}
+				catch(Exception e1){
+					e1.printStackTrace();
+				}
 				
-				File file = fch.showSaveDialog(stage);
-				if(file != null){
-					SaveFile(rList.printClosedRequests(), file);
+			});
+		}
+		else if(obj.getClass() == MenuItem.class){
+			((MenuItem)obj).setOnAction(e -> {
+				try{
+					fch.setTitle("Save Open Requests");
+					fch.setInitialFileName("all_open_requests");
+					
+					File file = fch.showSaveDialog(stage);
+					if(file != null){
+						SaveFile(rList.printOpenRequests(), file);
+					}
 				}
-			}
-			catch(Exception e1){
-				e1.printStackTrace();
-			}
-			
-		});
-	}
-	
-	// 1.11 Print All Techs MenuItem
-	public void mniPrintAllTechs(MenuItem mni, RequestFileChooser fch, Stage stage, TechnicianList tList){
-		mni.setOnAction(e -> {
-			try{
-				fch.setTitle("Save All Technicians");
-				fch.setInitialFileName("all_technicians");
+				catch(Exception e1){
+					e1.printStackTrace();
+				}
 				
-				File file = fch.showSaveDialog(stage);
-				if(file != null){
-					SaveFile(tList.printAllTechs(), file);
-				}
-			}
-			catch(Exception e1){
-				e1.printStackTrace();
-			}
-			
-		});
+			});
+		}
 	}
 	
-	// 1.12 Print All Techs Toolbar Button
-	public void mniPrintAllTechs(Button btn, RequestFileChooser fch, Stage stage, TechnicianList tList){
-		btn.setOnAction(e -> {
-			try{
-				fch.setTitle("Save All Technicians");
-				fch.setInitialFileName("all_technicians");
+	
+	/**
+	 * 1.5 Print Closed Requests.
+	 *
+	 * @param obj the Object
+	 * @param fch the RequestFileChooser
+	 * @param stage the Stage
+	 * @param rList the RequestList
+	 */
+	public void objPrintClosedRequests(Object obj, RequestFileChooser fch, Stage stage, RequestList rList){
+		if(obj.getClass() == Button.class){
+			((Button)obj).setOnAction(e -> {
+				try{
+					fch.setTitle("Save Closed Requests");
+					fch.setInitialFileName("all_closed_requests");
+					
+					File file = fch.showSaveDialog(stage);
+					if(file != null){
+						SaveFile(rList.printClosedRequests(), file);
+					}
+				}
+				catch(Exception e1){
+					e1.printStackTrace();
+				}
 				
-				File file = fch.showSaveDialog(stage);
-				if(file != null){
-					SaveFile(tList.printAllTechs(), file);
+			});
+		}
+		else if(obj.getClass() == MenuItem.class){
+			((MenuItem)obj).setOnAction(e -> {
+				try{
+					fch.setTitle("Save Closed Requests");
+					fch.setInitialFileName("all_closed_requests");
+					
+					File file = fch.showSaveDialog(stage);
+					if(file != null){
+						SaveFile(rList.printClosedRequests(), file);
+					}
 				}
-			}
-			catch(Exception e1){
-				e1.printStackTrace();
-			}
-			
-		});
+				catch(Exception e1){
+					e1.printStackTrace();
+				}
+				
+			});
+		}
 	}
 	
-	// 1.13 About MenuItem
+	/**
+	 * 1.6 Print All Techs.
+	 *
+	 * @param obj the Object
+	 * @param fch the RequestFileChooser
+	 * @param stage the Stage
+	 * @param tList the TechnicianList
+	 */
+	public void objPrintAllTechs(Object obj, RequestFileChooser fch, Stage stage, TechnicianList tList){
+		if(obj.getClass() == Button.class){
+			((Button)obj).setOnAction(e -> {
+				try{
+					fch.setTitle("Save All Technicians");
+					fch.setInitialFileName("all_technicians");
+					
+					File file = fch.showSaveDialog(stage);
+					if(file != null){
+						SaveFile(tList.printAllTechs(), file);
+					}
+				}
+				catch(Exception e1){
+					e1.printStackTrace();
+				}
+				
+			});
+		}
+		else if(obj.getClass() == MenuItem.class){
+			((MenuItem)obj).setOnAction(e -> {
+				try{
+					fch.setTitle("Save All Technicians");
+					fch.setInitialFileName("all_technicians");
+					
+					File file = fch.showSaveDialog(stage);
+					if(file != null){
+						SaveFile(tList.printAllTechs(), file);
+					}
+				}
+				catch(Exception e1){
+					e1.printStackTrace();
+				}
+				
+			});
+		}
+	}
+	
+	/**
+	 * 1.7 About
+	 *
+	 * @param mni the MenuItem
+	 * @param stage the Stage
+	 */
 	public void mniAbout(MenuItem mni, Stage stage){
 		mni.setOnAction(e -> {
 			WindowAbout createWindow = new WindowAbout(stage);
@@ -293,12 +351,27 @@ public class InterfaceMethods {
 		});
 	}
 	
-	// 1.14 Exit MenuItem
-	public void mniExit(MenuItem mni, SQLiteJDBC sql){
+	/**
+	 * 1.8 Exit
+	 *
+	 * @param mni the MenuItem
+	 * @param sql the SQLiteJDBC
+	 * @param stage the Stage
+	 */
+	public void mniExit(MenuItem mni, SQLiteJDBC sql, Stage stage){
 		mni.setOnAction(e -> {
 			try{
-				sql.closeDbConnection();
-				System.exit(0);
+				Alert alert = new Alert(AlertType.CONFIRMATION);
+				alert.setTitle("Close Program");
+				alert.setHeaderText("Are You Sure?");
+				alert.setContentText("Do you want to close Request Tracker?");
+				alert.initOwner(stage);
+				
+				Optional<ButtonType> result = alert.showAndWait();
+				if(result.get() == ButtonType.OK){
+					sql.closeDbConnection();
+					System.exit(0);
+				}
 			}
 			catch(Exception e1){
 				e1.printStackTrace();
@@ -306,8 +379,171 @@ public class InterfaceMethods {
 		});
 	}
 	
-	/************ 2.0 Form Buttons ************/
-	// 2.1 Save Request Changes
+	/**
+	 * 1.9 Delete All Requests
+	 *
+	 * @param obj the Object
+	 * @param dtpReq the DatePicker
+	 * @param dtpCom the DatPicker
+	 * @param chkCom the CheckBox
+	 * @param txaDes the TextArea
+	 * @param txaNot the TextArea
+	 * @param lsvT the ListView
+	 * @param rList the RequestList
+	 * @param tbvR the TableView
+	 * @param stage the Stage
+	 */
+	public void objDeleteAllRequests(
+			Object obj, DatePicker dtpReq, DatePicker dtpCom,
+			CheckBox chkCom, TextArea txaDes, TextArea txaNot,
+			ListView<Technician> lsvT, RequestList rList, 
+			TableView<Request> tbvR, Stage stage){
+		if(obj.getClass() == Button.class){
+			((Button) obj).setOnAction(e -> {
+				try{
+					Alert alert = new Alert(AlertType.CONFIRMATION);
+					alert.setTitle("Deletion Confirmation");
+					alert.setHeaderText("Are You Sure?");
+					alert.setContentText("Are you sure you want to delete all requests?");
+					alert.initOwner(stage);
+					
+					Optional<ButtonType> result = alert.showAndWait();		
+					if(result.get() == ButtonType.OK){
+						rList.deleteAll();
+						tbvR.setItems(rList.getAll());	
+						
+						dtpReq.setValue(null);
+						dtpCom.setValue(null);
+						dtpCom.setDisable(true);
+						chkCom.setSelected(false);
+						txaDes.setText(null);
+						txaNot.setText(null);
+						lsvT.setItems(null);
+					}
+				}
+				catch(Exception e1){
+					e1.printStackTrace();
+				}
+			});
+		}
+		else if(obj.getClass() == MenuItem.class){
+			((MenuItem) obj).setOnAction(e -> {
+				try{
+					Alert alert = new Alert(AlertType.CONFIRMATION);
+					alert.setTitle("Deletion Confirmation");
+					alert.setHeaderText("Are You Sure?");
+					alert.setContentText("Are you sure you want to delete all requests?");
+					alert.initOwner(stage);
+					
+					Optional<ButtonType> result = alert.showAndWait();		
+					if(result.get() == ButtonType.OK){
+						rList.deleteAll();
+						tbvR.setItems(rList.getAll());	
+						
+						dtpReq.setValue(null);
+						dtpCom.setValue(null);
+						dtpCom.setDisable(true);
+						chkCom.setSelected(false);
+						txaDes.setText(null);
+						txaNot.setText(null);
+						lsvT.setItems(null);
+					}
+				}
+				catch(Exception e1){
+					e1.printStackTrace();
+				}
+			});
+		}
+
+	}
+	
+	/**
+	 * 1.10 Delete All Technicians
+	 *
+	 * @param obj the Object
+	 * @param rList the RequestList
+	 * @param tList the TechnicianList
+	 * @param txfFir the TextField
+	 * @param txfLas the TextField
+	 * @param txfId the TextField
+	 * @param tbvR the TableView
+	 * @param tbvT the TableView
+	 * @param lsvT the ListView
+	 * @param stage the Stage
+	 */
+	public void objDeleteAllTechs(
+			Object obj, RequestList rList, TechnicianList tList,
+			TextField txfFir, TextField txfLas, TextField txfId,
+			TableView<Request> tbvR, TableView<Technician> tbvT,
+			ListView<Technician> lsvT, Stage stage){
+		if(obj.getClass() == Button.class){
+			((Button)obj).setOnAction(e -> {
+				try{
+					Alert alert = new Alert(AlertType.CONFIRMATION);
+					alert.setTitle("Deletion Confirmation");
+					alert.setHeaderText("Are You Sure?");
+					alert.setContentText("Are you sure you want to delete all technicians?");
+					alert.initOwner(stage);
+					
+					Optional<ButtonType> result = alert.showAndWait();
+					if(result.get() == ButtonType.OK){
+						tList.deleteAll();
+						tbvR.setItems(rList.getAll());
+						tbvT.setItems(tList.getAll());
+						lsvT.setItems(tList.getAll());	
+						
+						txfFir.setText("");
+						txfLas.setText("");
+						txfId.setText("");
+					}
+				}
+				catch(Exception e1){
+					e1.printStackTrace();
+				}
+			});	
+		}
+		else if(obj.getClass() == MenuItem.class){
+			((MenuItem)obj).setOnAction(e -> {
+				try{
+					Alert alert = new Alert(AlertType.CONFIRMATION);
+					alert.setTitle("Deletion Confirmation");
+					alert.setHeaderText("Are You Sure?");
+					alert.setContentText("Are you sure you want to delete all technicians?");
+					alert.initOwner(stage);
+					
+					Optional<ButtonType> result = alert.showAndWait();
+					if(result.get() == ButtonType.OK){
+						tList.deleteAll();
+						tbvR.setItems(rList.getAll());
+						tbvT.setItems(tList.getAll());
+						lsvT.setItems(tList.getAll());	
+						
+						txfFir.setText("");
+						txfLas.setText("");
+						txfId.setText("");
+					}
+				}
+				catch(Exception e1){
+					e1.printStackTrace();
+				}
+			});	
+		}
+	}
+	/********** 2.0 Form Buttons ***********/
+	/**
+	 * 2.1 Save Request Changes
+	 *
+	 * @param btn the Button
+	 * @param tbvR the TableView
+	 * @param lsvT the ListView
+	 * @param dtpReq the DatePicker
+	 * @param dtpCom the DatePicker
+	 * @param txaDes the TextArea
+	 * @param txaNot the TextArea
+	 * @param chkCom the CheckBox
+	 * @param rList the RequestList
+	 * @param tList the TechnicianList
+	 */
 	public void btnSaveRequestChanges(
 			Button btn, TableView<Request> tbvR, ListView<Technician> lsvT,
 			DatePicker dtpReq, DatePicker dtpCom, TextArea txaDes, TextArea txaNot, 
@@ -349,7 +585,19 @@ public class InterfaceMethods {
 		});
 	}
 	
-	// 2.2 Save Tech Changes
+	/**
+	 * 2.2 Save Tech Changes
+	 *
+	 * @param btn the Button
+	 * @param txfFir the TextField
+	 * @param txfLas the TextField
+	 * @param txfId the TextField
+	 * @param tbvR the TableView
+	 * @param tbvT the TableView
+	 * @param lsvT the ListView
+	 * @param rList the RequestList
+	 * @param tList the TechnicianList
+	 */
 	public void btnSaveTechChanges(
 			Button btn, TextField txfFir, 
 			TextField txfLas, TextField txfId,
@@ -374,17 +622,31 @@ public class InterfaceMethods {
 		});
 	}
 	
-	// 2.3 Delete Request
+	/**
+	 * 2.3 Delete Request
+	 *
+	 * @param btn the Button
+	 * @param tbvR the TableView
+	 * @param lsvT the ListView
+	 * @param dtpReq the DatePicker
+	 * @param dtpCom the DatePicker
+	 * @param txaDes the TextArea
+	 * @param txaNot the TextArea
+	 * @param chkCom the CheckBox
+	 * @param rList the RequestList
+	 * @param stage the Stage
+	 */
 	public void btnDeleteRequest(
 			Button btn, TableView<Request> tbvR, ListView<Technician> lsvT,
 			DatePicker dtpReq, DatePicker dtpCom, TextArea txaDes, TextArea txaNot, 
-			CheckBox chkCom, RequestList rList){
+			CheckBox chkCom, RequestList rList, Stage stage){
 		btn.setOnAction(e -> {
 			try{
 				Alert alert = new Alert(AlertType.CONFIRMATION);
 				alert.setTitle("Deletion Confirmation");
 				alert.setHeaderText("Are You Sure?");
 				alert.setContentText("Are you sure you want to delete this?");
+				alert.initOwner(stage);
 				
 				Optional<ButtonType> result = alert.showAndWait();
 				if(result.get() == ButtonType.OK){
@@ -404,17 +666,31 @@ public class InterfaceMethods {
 		});
 	}
 	
-	// 2.4 Delete Tech
+	/**
+	 * 2.4 Delete Tech
+	 *
+	 * @param btn the Button
+	 * @param txfFir the TextField
+	 * @param txfLas the TextField
+	 * @param txfId the TextField
+	 * @param tbvR the TableView
+	 * @param tbvT the TableView
+	 * @param lsvT the ListView
+	 * @param rList the RequestList
+	 * @param tList the TechnicianList
+	 * @param stage the Stage
+	 */
 	public void btnDeleteTech(
 			Button btn, TextField txfFir, TextField txfLas, 
 			TextField txfId, TableView<Request> tbvR, TableView<Technician> tbvT,
-			ListView<Technician> lsvT, RequestList rList, TechnicianList tList){
+			ListView<Technician> lsvT, RequestList rList, TechnicianList tList, Stage stage){
 		btn.setOnAction(e -> {
 			try{
 				Alert alert = new Alert(AlertType.CONFIRMATION);
 				alert.setTitle("Deletion Confirmation");
 				alert.setHeaderText("Are You Sure?");
 				alert.setContentText("Are you sure you want to delete this?");
+				alert.initOwner(stage);
 				
 				Optional<ButtonType> result = alert.showAndWait();
 				if(result.get() == ButtonType.OK){
@@ -435,7 +711,18 @@ public class InterfaceMethods {
 		
 	}
 	
-	// 2.5 Create Request
+	/**
+	 * 2.5 Create Request
+	 *
+	 * @param btn the Button
+	 * @param dtpReq the DatePicker
+	 * @param dtpCom the DatePicker
+	 * @param chkCom the CheckBox
+	 * @param txaDes the TextArea
+	 * @param txaNot the TextArea
+	 * @param lsvT the ListView
+	 * @param stage the Stage
+	 */
 	public void btnCreateRequest(
 			Button btn, DatePicker dtpReq, DatePicker dtpCom,
 			CheckBox chkCom, TextArea txaDes, TextArea txaNot, 
@@ -486,7 +773,15 @@ public class InterfaceMethods {
 		});
 	}
 	
-	// 2.6 Create Tech
+	/**
+	 * 2.6 Create Tech
+	 *
+	 * @param btn the Button
+	 * @param txfFir the TextField
+	 * @param txfLas the TextField
+	 * @param txfId the TextField
+	 * @param stage the Stage
+	 */
 	public void btnCreateTech(
 			Button btn, TextField txfFir, TextField txfLas, 
 			TextField txfId, Stage stage){
@@ -506,8 +801,13 @@ public class InterfaceMethods {
 		});
 	}
 	
-	/************ 3.0 Stage ************/
-	// 3.1 Primary Stage Close Request
+	/********** 3.0 Stage ***********/
+	/**
+	 * 3.1 Primary Stage Close Request
+	 *
+	 * @param stage the Stage
+	 * @param data the SQLiteJDBC
+	 */
 	public void onCloseRequest(Stage stage, SQLiteJDBC data){
 		stage.setOnCloseRequest(e -> {
 			try {
@@ -518,15 +818,42 @@ public class InterfaceMethods {
 		});
 	}
 	
-	// 3.2 Stage Close
+	/**
+	 * 3.2 Stage Close
+	 *
+	 * @param btn the Button
+	 * @param stage the Stage
+	 */
 	public void stageClose(Button btn, Stage stage){
 		btn.setOnAction(e -> {	
-			stage.close();
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.setTitle("Cancel");
+			alert.setHeaderText("Are You Sure?");
+			alert.setContentText("If you cancel, your input will not be saved.");
+			alert.initOwner(stage);
+			
+			Optional<ButtonType> result = alert.showAndWait();
+			if(result.get() == ButtonType.OK){
+				stage.close();
+			}
 		});
 	}
 	
-	/************ 4.0 Listeners ***********/
-	// 4.1 Request Table
+	/********** 4.0 Listeners **********/
+	/**
+	 * 4.1 Request Table
+	 *
+	 * @param tbvR the TableView
+	 * @param dtpReq the DatePicker
+	 * @param dtpComp the dtp comp
+	 * @param txaDes the TextArea
+	 * @param txaNot the TextArea
+	 * @param lsvT the ListView
+	 * @param chkCom the CheckBox
+	 * @param btnSav the Button
+	 * @param btnDel the Button
+	 * @param tList the TechnicianList
+	 */
 	public void requestTableListener(
 			TableView<Request> tbvR, DatePicker dtpReq, DatePicker dtpComp,
 			TextArea txaDes, TextArea txaNot, ListView<Technician> lsvT,
@@ -561,9 +888,7 @@ public class InterfaceMethods {
 					btnSav.setVisible(true);
 					btnDel.setVisible(true);
 				}
-				else{
-					
-					
+				else{	
 					btnSav.setVisible(false);
 					btnDel.setVisible(false);
 				}
@@ -574,7 +899,16 @@ public class InterfaceMethods {
 		});
 	}
 	
-	// 4.2 Tech Table
+	/**
+	 * 4.2 Tech Table
+	 *
+	 * @param tbvT the TableView
+	 * @param txfFir the TextField
+	 * @param txfLas the TextField
+	 * @param txfId the TextField
+	 * @param btnSav the Button
+	 * @param btnDel the Button
+	 */
 	public void techTableListener(
 			TableView<Technician> tbvT, TextField txfFir, TextField txfLas, 
 			TextField txfId, Button btnSav, Button btnDel){
@@ -598,7 +932,12 @@ public class InterfaceMethods {
 		});
 	}
 	
-	// 4.3 CheckBox
+	/**
+	 * 4.3 CheckBox
+	 *
+	 * @param chk the CheckBox
+	 * @param dtp the DatePicker
+	 */
 	public void checkboxListener(
 			CheckBox chk, DatePicker dtp){
 		chk.selectedProperty().addListener((ov, oldV, newV) -> {
@@ -612,7 +951,11 @@ public class InterfaceMethods {
 		});
 	}
 	
-	// 4.4 TextField
+	/**
+	 * 4.4 TextField
+	 *
+	 * @param txf the TextField
+	 */
 	public void textfieldListener(
 			TextField txf){
 		txf.textProperty().addListener((ovs, oldV, newV) -> {
@@ -622,9 +965,14 @@ public class InterfaceMethods {
 		});
 	}
 	
-	/************ 5.0 Cell Values ************/
-	// 5.1 Date Requested Column
+	/********** 5.0 Cell Values ***********/
+	/**
+	 * 5.1 Date Requested Column
+	 *
+	 * @param col the TableColumn
+	 */
 	public void dateRequestedCol(TableColumn<Request, String> col){
+		col.setMinWidth(150);
 		col.setCellValueFactory(new Callback<CellDataFeatures<Request, String>, ObservableValue<String>>(){
 
 			@Override
@@ -640,8 +988,13 @@ public class InterfaceMethods {
 		});
 	}
 	
-	// 5.2 Date Completed Column
+	/**
+	 * 5.2 Date Completed Column
+	 *
+	 * @param col the TableColumn
+	 */
 	public void dateCompletedCol(TableColumn<Request, String> col){
+		col.setMinWidth(150);
 		col.setCellValueFactory(new Callback<CellDataFeatures<Request, String>, ObservableValue<String>>(){
 
 			@Override
@@ -657,8 +1010,13 @@ public class InterfaceMethods {
 		});
 	}
 	
-	// 5.3 Description Column
+	/**
+	 * 5.3 Description Column
+	 *
+	 * @param col the TableColumn
+	 */
 	public void descriptionCol(TableColumn<Request, String> col){
+		col.setMinWidth(100);
 		col.setCellValueFactory(new Callback<CellDataFeatures<Request, String>, ObservableValue<String>>(){
 
 			@Override
@@ -674,8 +1032,14 @@ public class InterfaceMethods {
 		});
 	}
 	
-	// 5.4 Tech Id Column
+	/**
+	 * 5.4 Tech Id Column
+	 *
+	 * @param col the TableColumn
+	 * @param tList the TechnicianList
+	 */
 	public void techIdCol(TableColumn<Request, String> col, TechnicianList tList){
+		col.setMinWidth(150);
 		col.setCellValueFactory(new Callback<CellDataFeatures<Request, String>, ObservableValue<String>>(){
 
 			@Override
@@ -693,8 +1057,14 @@ public class InterfaceMethods {
 		});
 	}
 	
-	// 5.5 Tech Name Column
+	/**
+	 * 5.5 Tech Name Column
+	 *
+	 * @param col the TableColumn
+	 * @param tList the TechnicianList
+	 */
 	public void techNameCol(TableColumn<Request, String> col, TechnicianList tList){
+		col.setMinWidth(150);
 		col.setCellValueFactory(new Callback<CellDataFeatures<Request, String>, ObservableValue<String>>(){
 
 			@Override
@@ -714,8 +1084,13 @@ public class InterfaceMethods {
 		});
 	}
 	
-	// 5.6 Notes Column
+	/**
+	 * 5.6 Notes Column
+	 *
+	 * @param col the TableColumn
+	 */
 	public void notesCol(TableColumn<Request, String> col){
+		col.setMinWidth(100);
 		col.setCellValueFactory(new Callback<CellDataFeatures<Request, String>, ObservableValue<String>>(){
 
 			@Override
@@ -731,8 +1106,13 @@ public class InterfaceMethods {
 		});
 	}
 	
-	// 5.7 Is Completed Column
+	/**
+	 * 5.7 Is Completed Column
+	 *
+	 * @param col the TableColumn
+	 */
 	public void isCompletedCol(TableColumn<Request, String> col){
+		col.setMinWidth(100);
 		col.setCellValueFactory(new Callback<CellDataFeatures<Request, String>, ObservableValue<String>>(){
 
 			@Override
@@ -748,7 +1128,28 @@ public class InterfaceMethods {
 		});
 	}
 	
-	// 5.8 Technician ListView
+	/**
+	 * 5.8 Request Id Column
+	 *
+	 * @param col the TableColumn
+	 */
+	public void idColumn(TableColumn<Request, String> col){
+		col.setMinWidth(100);
+		col.setCellValueFactory(new Callback<CellDataFeatures<Request, String>, ObservableValue<String>>(){
+
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Request, String> data) {
+				return new SimpleStringProperty(Integer.toString(data.getValue().getId()));
+			}
+			
+		});
+	}
+	
+	/**
+	 * 5.9 Technician ListView.
+	 *
+	 * @param lsv the ListView
+	 */
 	public void techListView(ListView<Technician> lsv){
 		lsv.setCellFactory(new Callback<ListView<Technician>, ListCell<Technician>>(){
 			@Override
@@ -773,8 +1174,70 @@ public class InterfaceMethods {
 		});
 	}
 	
-	/************ 6.0 Private Helper Functions ************/
-	// 6.1 Save File
+	/**
+	 *  5.10 First Name Column
+	 *  
+	 *  @param col the TableColumn
+	 */
+	public void firstName(TableColumn<Technician, String> col){
+		col.setMinWidth(150);
+		col.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+	}
+	
+	/**
+	 *  5.11 Last Name Column
+	 *  
+	 *  @param col the TableColumn
+	 */
+	public void lastName(TableColumn<Technician, String> col){
+		col.setMinWidth(150);
+		col.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+	}
+	
+	/**
+	 *  5.12 ID Number Column
+	 *  
+	 *  @param col the TableColumn
+	 */
+	public void idNumber(TableColumn<Technician, String> col){
+		col.setMinWidth(150);
+		col.setCellValueFactory(new PropertyValueFactory<>("idNumber"));
+	}
+	
+	/************ 6.0 Add TableColumns to TableView ************/
+	/**
+	 * 6.1 Add Request Columns
+	 *
+	 * @param tbvR the TableView
+	 * @param columns the TableColumn[]
+	 */
+	public void addRequestColumns(TableView<Request> tbvR, @SuppressWarnings("unchecked") TableColumn<Request, String>...columns){
+		for(TableColumn<Request, String> t:columns){
+			tbvR.getColumns().add(t);
+		}
+		tbvR.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+	}
+	
+	/**
+	 * 6.2 Add Technician Columns
+	 * 
+	 * @param tbvT the TableView
+	 * @param columns the TableColumn[]
+	 */
+	public void addTechColumns(TableView<Technician> tbvT, @SuppressWarnings("unchecked") TableColumn<Technician, String>...columns){
+		for(TableColumn<Technician, String> t:columns){
+			tbvT.getColumns().add(t);
+		}
+		tbvT.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+	}
+	
+	/********** 7.0 Private Helper Functions ***********/
+	/**
+	 * 7.1 Save File
+	 * 
+	 * @param content the String
+	 * @param file the File
+	 */
 	private void SaveFile(String content, File file){
         try  (BufferedWriter bw = new BufferedWriter(new FileWriter(file))){
         	StringBuilder line = new StringBuilder();

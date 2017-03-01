@@ -13,13 +13,28 @@ import javafx.scene.layout.TilePane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+/**
+ * The Class WindowCreateTechnician.
+ * Creates a stage that will allow the
+ * user to create a new Technician object.
+ * Any blank fields will be acceptable input.
+ * 
+ * @author Chaz-Rae L. Moncrieffe
+ * @since 3/1/2017
+ */
 public class WindowCreateTechnician {
 	private Stage stage;
 	private Scene scene;
 	
+	/**
+	 * Instantiates a new WindowCreateTechnician.
+	 *
+	 * @param primaryStage the Stage
+	 * @throws Exception the Exception
+	 */
 	public WindowCreateTechnician(Stage primaryStage) throws Exception{
 		stage = new Stage();
-		scene = new Scene(setUpScene(), 350, 300);
+		scene = new Scene(setUpScene(), 320, 250);
 		
 		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		stage.setScene(scene);
@@ -29,10 +44,19 @@ public class WindowCreateTechnician {
 		stage.initOwner(primaryStage);
 	}
 	
+	/**
+	 * Show WindowCreateTechnician.
+	 */
 	public void Show(){
 		stage.showAndWait();
 	}
 	
+	/**
+	 * Sets up the  scene.
+	 *
+	 * @return the GridPane
+	 * @throws Exception the Exception
+	 */
 	private GridPane setUpScene() throws Exception{
 		GridPane root = new GridPane();
 		root.setPadding(new Insets(20));
@@ -49,7 +73,7 @@ public class WindowCreateTechnician {
 		TextField txfFirstName = new TextField();
 		TextField txfLastName = new TextField();
 		TextField txfIdNumber = new TextField();
-		Button btnClose = new Button("Close");
+		Button btnClose = new Button("Cancel");
 		Button btnCreate = new Button("Create");
 		
 		InterfaceMethods methods = new InterfaceMethods();

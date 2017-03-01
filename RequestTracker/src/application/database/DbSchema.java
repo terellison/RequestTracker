@@ -1,14 +1,30 @@
 package application.database;
 
-/*
- * These are the names of the tables and columns used for the
+/**
+ * The Class DbSchema.
+ * Holds the names of the tables and columns used for the
  * database in the SQLiteJDBC class.
+ * 
+ * @author Chaz-Rae L. Moncrieffe
+ * @since 3/1/2017
  */
+
 public class DbSchema {
+	
+	/**
+	 * The Class RequestTable.
+	 * Holds the names of the request table and the columns.
+	 */
 	public static final class RequestTable{
 		public static final String NAME = "request";		
+		
+		/**
+		 * The Class Cols.
+		 * Holds the names of the columns.
+		 */
 		public static final class Cols{
 			public static final String UUID = "uuid";
+			public static final String ID = "requestId";
 			public static final String REQUESTED = "requested";
 			public static final String COMPLETED = "completed";
 			public static final String DESCRIPTION = "description";
@@ -17,8 +33,18 @@ public class DbSchema {
 			public static final String ISCOMPLETED = "isCompleted";
 		}
 	}
+	
+	/**
+	 * The Class TechnicianTable.
+	 * Holds the names of the technician table and the columns.
+	 */
 	public static final class TechnicianTable{
 		public static final String NAME = "technician";	
+		
+		/**
+		 * The Class Cols.
+		 * Holds the names of the columns.
+		 */
 		public static final class Cols{
 			public static final String UUID = "uuid";
 			public static final String FIRSTNAME = "firstName";

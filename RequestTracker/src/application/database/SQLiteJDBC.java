@@ -15,13 +15,17 @@ import application.database.DbSchema.TechnicianTable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-/*
- * Table of Contents
- * 
- * This class holds all the methods for creating, reading,
+/**
+ * The Class SQLiteJDBC.
+ * Holds all the methods for creating, reading,
  * updating, and deleting from the database and is meant to
  * be a single static instance.
  * 
+ * @author Chaz-Rae L. Moncrieffe
+ * @since 3/1/2017
+ */
+/*
+ * Table of Contents
  * 	1.0	Table Creation
  * 		1.1 Request Table
  * 		1.2 Technician Table
@@ -38,23 +42,30 @@ import javafx.collections.ObservableList;
  * 	5.0 Data Deletion
  * 		5.1 One Request
  * 		5.2 One Technician
+ * 		5.3 All Requests
+ * 		5.4 All Technicians
  * 	6.0 Data Printing
  * 		6.1 All Requests
  * 		6.2 Open Requests
  * 		6.3 Closed Requests
  * 		6.4 All Technicians
  * 	7.0	Database Closing
- * 		7.1 Closes the database connection to the .db file
+ * 		7.1 Close database Connection
  * 	8.0 Private Helper Functions
- * 		8.1 Get All Technician IDs
- * 		8.2 Format Multiline String for Report
+ * 		8.1 All Technician IDs
+ * 		8.2 Format Multiline String
  */
 public class SQLiteJDBC {
 	private static SQLiteJDBC database;
 	private static Connection c = null;
 	private static PreparedStatement preStmt = null;
 	
-	// Instantiates the class to a static variable
+	/**
+	 * Gets the instance of the SQLiteJDBC class.
+	 *
+	 * @return the SQLiteJDBC
+	 * @throws Exception the Exception
+	 */
 	public static SQLiteJDBC get() throws Exception{
 		if(database == null){
 			database = new SQLiteJDBC();
@@ -62,18 +73,28 @@ public class SQLiteJDBC {
 		return database;
 	}
 	
-	// Creates the database file if not already created and creates a connection to it
+	/**
+	 * Instantiates a new SQLiteJDBC.
+	 *
+	 * @throws Exception the Exception
+	 */
 	private SQLiteJDBC() throws Exception{
 		Class.forName("org.sqlite.JDBC");
 		c = DriverManager.getConnection("jdbc:sqlite:request.db");
 	}
 	
 	/************ 1.0 Table Creation ************/
-	// 1.1 Request Table: Creates the request table with its columns 
+	/**
+	 * 1.1 Request Table
+	 * Creates the request table.
+	 *
+	 * @throws Exception the Exception
+	 */
 	public void createRequestTable() throws Exception{
 		String sql = "CREATE TABLE IF NOT EXISTS " + RequestTable.NAME +
                   "(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                   RequestTable.Cols.UUID + " TEXT NOT NULL, " +
+                  RequestTable.Cols.ID + " INTEGER NOT NULL, " +
                   RequestTable.Cols.REQUESTED + " TEXT NOT NULL, " + 
                   RequestTable.Cols.COMPLETED + " TEXT NOT NULL, " +
                   RequestTable.Cols.DESCRIPTION + " TEXT NOT NULL, " + 
@@ -86,7 +107,12 @@ public class SQLiteJDBC {
 	    preStmt.close();
 	}
 	
-	// 1.2 Technician Table: Creates the technician table with its columns 
+	/**
+	 * 1.2 Technician Table
+	 * Creates the technician table.
+	 *
+	 * @throws Exception the Exception
+	 */
 	public void createTechTable() throws Exception{
 		String sql = "CREATE TABLE IF NOT EXISTS " + TechnicianTable.NAME +
                 "(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
@@ -100,7 +126,13 @@ public class SQLiteJDBC {
 	}
 	
 	/************ 2.0 Table Insertion ************/
-	// 2.1 Request Insert: Inserts a request into the request table
+	/**
+	 * 2.1 Request Insert
+	 * Insert into request table.
+	 *
+	 * @param r the request
+	 * @throws Exception the Exception
+	 */
 	public void insertRequestTable(Request r) throws Exception{
 		String sql = "INSERT INTO " + RequestTable.NAME +
 				"(" + RequestTable.Cols.UUID + ", " +
@@ -109,8 +141,9 @@ public class SQLiteJDBC {
                 RequestTable.Cols.DESCRIPTION + ", " + 
                 RequestTable.Cols.TECH + ", " +
                 RequestTable.Cols.NOTES + ", " +
-                RequestTable.Cols.ISCOMPLETED + ")" +
-                "VALUES(?,?,?,?,?,?,?)";
+                RequestTable.Cols.ISCOMPLETED + "," +
+                RequestTable.Cols.ID + ")" +
+                "VALUES(?,?,?,?,?,?,?,?)";
 		
 		preStmt = c.prepareStatement(sql);
 		preStmt.setString(1, r.getUUID().toString());
@@ -120,12 +153,19 @@ public class SQLiteJDBC {
 		preStmt.setString(5, r.getTechId());
 		preStmt.setString(6, r.getNotes());
 		preStmt.setBoolean(7, r.isCompleted());
+		preStmt.setInt(8, r.getId());
 		
 		preStmt.executeUpdate();
 		preStmt.close();
 	}
 	
-	// 2.2 Technician Insert: Inserts a technician into the technician table
+	/**
+	 * 2.2 Technician Insert
+	 * Insert into tech table.
+	 *
+	 * @param t the technician
+	 * @throws Exception the Exception
+	 */
 	public void insertTechTable(Technician t) throws Exception{
 		String sql = "INSERT INTO " + TechnicianTable.NAME +
 				"(" + TechnicianTable.Cols.UUID + ", " +
@@ -145,7 +185,13 @@ public class SQLiteJDBC {
 	}
 	
 	/************ 3.0 Table Updating ************/
-	// 3.1 Request Update: Updates a request in the request table when it finds a UUID match
+	/**
+	 * 3.1 Request Update
+	 * Update request table.
+	 *
+	 * @param r the request
+	 * @throws Exception the Exception
+	 */
 	public void updateRequestTable(Request r) throws Exception{
 		String sql = "UPDATE " + RequestTable.NAME + " SET " +
 				RequestTable.Cols.REQUESTED + " = ?, " +
@@ -153,7 +199,8 @@ public class SQLiteJDBC {
 				RequestTable.Cols.DESCRIPTION + " = ?, " +
 				RequestTable.Cols.TECH + " = ?, " +
 				RequestTable.Cols.NOTES + " = ?, " +
-				RequestTable.Cols.ISCOMPLETED + " = ? WHERE " +
+				RequestTable.Cols.ISCOMPLETED + " = ?, " +
+				RequestTable.Cols.ID + " = ? WHERE " +
 				RequestTable.Cols.UUID + " = ?";
 		
 		preStmt = c.prepareStatement(sql);
@@ -163,13 +210,20 @@ public class SQLiteJDBC {
 		preStmt.setString(4, r.getTechId());
 		preStmt.setString(5, r.getNotes());
 		preStmt.setBoolean(6, r.isCompleted());
-		preStmt.setString(7, r.getUUID().toString());
+		preStmt.setInt(7, r.getId());
+		preStmt.setString(8, r.getUUID().toString());
 		
 		preStmt.executeUpdate();
 		preStmt.close();
 	}
 	
-	// 3.2 Technician Update: Updates a technician in the technician table when it finds a UUID match
+	/**
+	 * 3.2 Technician Update
+	 * Update tech table.
+	 *
+	 * @param t the technician
+	 * @throws Exception the Exception
+	 */
 	public void updateTechTable(Technician t) throws Exception{
 		String sql = "UPDATE " + TechnicianTable.NAME + " SET " + 
 				TechnicianTable.Cols.FIRSTNAME + " = ?, " + 
@@ -188,7 +242,13 @@ public class SQLiteJDBC {
 	}
 	
 	/************ 4.0 Data Retrieval ************/
-	// 4.1 All Requests: Gets all the requests from the request table
+	/**
+	 * 4.1 All Requests
+	 * Gets all requests from table.
+	 *
+	 * @return the request list
+	 * @throws Exception the Exception
+	 */
 	public ObservableList<Request> getAllRequestTable() throws Exception{
 		ObservableList<Request> list = FXCollections.observableArrayList();
 		String sql = "SELECT * FROM " + RequestTable.NAME;
@@ -203,9 +263,10 @@ public class SQLiteJDBC {
 			String description = rs.getString(RequestTable.Cols.DESCRIPTION);
 			String techUUID = rs.getString(RequestTable.Cols.TECH);
 			String notes = rs.getString(RequestTable.Cols.NOTES);
-			Boolean isCompleted = rs.getBoolean(RequestTable.Cols.ISCOMPLETED);
+			boolean isCompleted = rs.getBoolean(RequestTable.Cols.ISCOMPLETED);
+			int id = rs.getInt(RequestTable.Cols.ID); 
 			
-			Request r = new Request(uuid, requested, completed, description, UUID.fromString(techUUID), notes, isCompleted);
+			Request r = new Request(uuid, id, requested, completed, description, UUID.fromString(techUUID), notes, isCompleted);
 			list.add(r);
 		}
 		rs.close();
@@ -213,7 +274,13 @@ public class SQLiteJDBC {
 		return list;
 	}
 	
-	// 4.2 All Technicians: Gets all the technicians from the technician table
+	/**
+	 * 4.2 All Technicians
+	 * Gets all techs from table.
+	 *
+	 * @return the tech list
+	 * @throws Exception the Exception
+	 */
 	public ObservableList<Technician> getAllTechTable() throws Exception{
 		ObservableList<Technician> list = FXCollections.observableArrayList();
 		String sql = "SELECT * FROM " + TechnicianTable.NAME;
@@ -235,7 +302,14 @@ public class SQLiteJDBC {
 		return list;
 	}
 	
-	// 4.3 One Technician: Gets one technician from the technician table
+	/**
+	 * 4.3 One Technician
+	 * Gets one tech from table.
+	 *
+	 * @param techUUID the tech UUID
+	 * @return one tech from table
+	 * @throws Exception the Exception
+	 */
 	public Technician getOneTechTable(UUID techUUID) throws Exception{
 		String sql = "SELECT * FROM " + TechnicianTable.NAME +
 				" WHERE " + TechnicianTable.Cols.UUID + " = ?";
@@ -264,7 +338,13 @@ public class SQLiteJDBC {
 	}
 	
 	/************ 5.0 Data Deletion ************/
-	// 5.1 One Request: Deletes one request from the request table
+	/**
+	 * 5.1 One Request
+	 * Deletes one request from table.
+	 *
+	 * @param requestUUID the request UUID
+	 * @throws Exception the Exception
+	 */
 	public void deleteOneRequestTable(UUID requestUUID) throws Exception{
 		String sql = "DELETE FROM " + RequestTable.NAME +
 				" WHERE " + RequestTable.Cols.UUID + " = ?";
@@ -275,7 +355,13 @@ public class SQLiteJDBC {
 		preStmt.close();
 	}
 	
-	// 5.2 One Technician: Deletes one technician from the technician table
+	/**
+	 * 5.2 One Technician
+	 * Deletes one technician from table.
+	 *
+	 * @param techUUID the tech UUID
+	 * @throws Exception the Exception
+	 */
 	public void deleteOneTechTable(UUID techUUID) throws Exception{
 		String sql = "DELETE FROM " + TechnicianTable.NAME +
 				" WHERE " + TechnicianTable.Cols.UUID + " = ?";
@@ -286,15 +372,47 @@ public class SQLiteJDBC {
 		preStmt.close();
 	}
 	
+	/**
+	 * 5.3 All Requests
+	 * Deletes all requests from table.
+	 *
+	 * @throws Exception the Exception
+	 */
+	public void deleteAllRequestTable() throws Exception{
+	    String sql = "DELETE FROM " + RequestTable.NAME;
+		preStmt = c.prepareStatement(sql);
+		preStmt.executeUpdate();
+	}
+	
+	/**
+	 * 5.4 All Technicians
+	 * Deletes all technicians from table.
+	 *
+	 * @throws Exception the exception
+	 */
+	public void deleteAllTechTable() throws Exception{
+	    String sql = "DELETE FROM " + TechnicianTable.NAME;
+		preStmt = c.prepareStatement(sql);
+		preStmt.executeUpdate();
+	}
+	
 	/************ 6.0 Data Printing ************/
-	// 6.1 All Requests: Gets all requests by technician and outputs a string
+	/**
+	 * 6.1 All Requests
+	 * Prints all requests by technician.
+	 *
+	 * @return the string
+	 * @throws Exception
+	 */
 	public String printAllRequests() throws Exception{
 		StringBuilder report = new StringBuilder();
 		List<String> techIDs = getAllTechIDs();
 		
 		report.append("############ All Requests ############");
 		for(String id:techIDs){
-			String sql = "SELECT " + RequestTable.Cols.REQUESTED +", " + 
+			String sql = "SELECT " + 
+				RequestTable.Cols.ID + ", " + 
+				RequestTable.Cols.REQUESTED +", " + 
 				RequestTable.Cols.COMPLETED + ", " +
 				RequestTable.Cols.DESCRIPTION + ", " + 
 				RequestTable.Cols.NOTES + ", " +
@@ -312,6 +430,7 @@ public class SQLiteJDBC {
 			
 			int count = 0;
 			while(rs.next()){
+				String reqId = Integer.toString(rs.getInt(RequestTable.Cols.ID));
 				String requested = rs.getString(RequestTable.Cols.REQUESTED);
 				String completed = rs.getString(RequestTable.Cols.COMPLETED).equals("") ? "n/a" : rs.getString(RequestTable.Cols.COMPLETED);
 				String description = rs.getString(RequestTable.Cols.DESCRIPTION);
@@ -323,6 +442,7 @@ public class SQLiteJDBC {
 					report.append("\n/************ " + techName + " " + techId + " ************/\n");
 					count++;
 				}
+				report.append("request id:\t" + reqId + "\n");
 				report.append("requested:\t" + requested + "\n");
 				report.append("completed:\t" + completed + "\n");
 				report.append("description:\n");
@@ -337,14 +457,22 @@ public class SQLiteJDBC {
 		return report.toString();
 	}
 		
-	// 6.2 Open Requests: Gets non-completed requests by technician and outputs a string
+	/**
+	 * 6.2 Open Requests
+	 * Prints the open requests by technician.
+	 *
+	 * @return the string
+	 * @throws Exception
+	 */
 	public String printOpenRequests() throws Exception{
 		StringBuilder report = new StringBuilder();
 		List<String> techIDs = getAllTechIDs();
 		
 		report.append("############ Open Requests ############");
 		for(String id:techIDs){
-			String sql = "SELECT " + RequestTable.Cols.REQUESTED +", " + 
+			String sql = "SELECT " +
+				RequestTable.Cols.ID + ", " + 
+				RequestTable.Cols.REQUESTED +", " + 
 				RequestTable.Cols.COMPLETED + ", " +
 				RequestTable.Cols.DESCRIPTION + ", " + 
 				RequestTable.Cols.NOTES + ", " + 
@@ -363,6 +491,7 @@ public class SQLiteJDBC {
 		
 			int count = 0;
 			while(rs.next()){
+				String reqId = Integer.toString(rs.getInt(RequestTable.Cols.ID));
 				String requested = rs.getString(RequestTable.Cols.REQUESTED);
 				String completed = rs.getString(RequestTable.Cols.COMPLETED).equals("") ? "n/a" : rs.getString(RequestTable.Cols.COMPLETED);
 				String description = rs.getString(RequestTable.Cols.DESCRIPTION);
@@ -374,6 +503,7 @@ public class SQLiteJDBC {
 					report.append("\n/************ " + techName + " " + techId + " ************/\n");
 					count++;
 				}
+				report.append("request id:\t" + reqId + "\n");
 				report.append("requested:\t" + requested + "\n");
 				report.append("completed:\t" + completed + "\n");
 				report.append("description:\n");
@@ -388,14 +518,22 @@ public class SQLiteJDBC {
 		return report.toString();
 	}
 	
-	// 6.3 Closed Requests: Gets all completed requests and outputs a string
+	/**
+	 * 6.3 Closed Requests
+	 * Prints the closed requests by technician.
+	 *
+	 * @return the string
+	 * @throws Exception
+	 */
 	public String printClosedRequests() throws Exception{
 		StringBuilder report = new StringBuilder();
 		List<String> techIDs = getAllTechIDs();
 		
 		report.append("############ Completed Requests ############");
 		for(String id:techIDs){
-			String sql = "SELECT " + RequestTable.Cols.REQUESTED +", " + 
+			String sql = "SELECT " + 
+					RequestTable.Cols.ID + ", " + 
+					RequestTable.Cols.REQUESTED +", " + 
 					RequestTable.Cols.COMPLETED + ", " +
 					RequestTable.Cols.DESCRIPTION + ", " + 
 					RequestTable.Cols.NOTES + ", " + 
@@ -414,6 +552,7 @@ public class SQLiteJDBC {
 				
 			int count = 0;
 			while(rs.next()){
+				String reqId = Integer.toString(rs.getInt(RequestTable.Cols.ID));
 				String requested = rs.getString(RequestTable.Cols.REQUESTED);
 				String completed = rs.getString(RequestTable.Cols.COMPLETED).equals("") ? "n/a" : rs.getString(RequestTable.Cols.COMPLETED);
 				String description = rs.getString(RequestTable.Cols.DESCRIPTION);
@@ -425,6 +564,7 @@ public class SQLiteJDBC {
 					report.append("\n/************ " + techName + " " + techId + " ************/\n");
 					count++;
 				}
+				report.append("request id:\t" + reqId + "\n");
 				report.append("requested:\t" + requested + "\n");
 				report.append("completed:\t" + completed + "\n");
 				report.append("description:\n");
@@ -439,7 +579,13 @@ public class SQLiteJDBC {
 		return report.toString();
 	}
 	
-	// 6.4 All Technicians: Gets all technicians and outputs a string
+	/**
+	 * 6.4 All Technicians
+	 * Prints all techs.
+	 *
+	 * @return the string
+	 * @throws Exception
+	 */
 	public String printAllTechs() throws Exception{
 		StringBuilder report = new StringBuilder();		
 		report.append("############ All Technicians ############");
@@ -467,13 +613,23 @@ public class SQLiteJDBC {
 	}
 	
 	/************ 7.0 Database Closing ************/
-	// 7.1 Closes the database connection to the .db file
+	/**
+	 * 7.1 Close database connection.
+	 *
+	 * @throws Exception
+	 */
 	public void closeDbConnection() throws Exception{
 		c.close();
 	} 
 	
 	/************ 8.0 Private Helper Functions ************/
-	// 8.1 Get All Technician IDs: Gets all the technician UUIDs for use in other functions
+	/**
+	 * 8.1 All Technician IDs
+	 * Gets all the tech IDs.
+	 *
+	 * @return list of tech IDs
+	 * @throws Exception
+	 */
 	private List<String> getAllTechIDs() throws Exception{
 		List<String> techIDs= new ArrayList<>();
 		String sql = "SELECT " + TechnicianTable.Cols.UUID + " FROM " +
@@ -492,7 +648,14 @@ public class SQLiteJDBC {
 		return techIDs;
 	}
 	
-	// 8.2 Format Multiline String for Report: Takes in a string and formats it for use in other functions
+	/**
+	 * 8.2 Format Multiline String
+	 * Formats a multiline string for the 
+	 * data printing functions.
+	 *
+	 * @param multiline the multiline string
+	 * @return the string
+	 */
 	private String formatMultilineForReport(String multiline){
 		StringBuilder singleLine = new StringBuilder();
 		StringBuilder finalMultiline = new StringBuilder();

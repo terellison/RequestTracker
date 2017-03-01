@@ -17,13 +17,28 @@ import javafx.scene.layout.TilePane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+/**
+ * The Class WindowCreateRequest.
+ * Creates a stage that will allow the
+ * user to create a new Request object.
+ * Any blank fields will be acceptable input.
+ * 
+ * @author Chaz-Rae L. Moncrieffe
+ * @since 3/1/2017
+ */
 public class WindowCreateRequest {
 	private Stage stage;
 	private Scene scene;
 	
+	/**
+	 * Instantiates a new WindowCreateRequest.
+	 *
+	 * @param primaryStage the Stage
+	 * @throws Exception the Exception
+	 */
 	public WindowCreateRequest(Stage primaryStage) throws Exception{
 		stage = new Stage();
-		scene = new Scene(setUpScene(),450,670);	
+		scene = new Scene(setUpScene(),450,600);	
 		
 		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		stage.setScene(scene);
@@ -33,10 +48,19 @@ public class WindowCreateRequest {
 		stage.initOwner(primaryStage);
 	}
 	
+	/**
+	 * Show WindowCreateRequest.
+	 */
 	public void Show(){
 		stage.showAndWait();
 	}
 	
+	/**
+	 * Sets up  the scene.
+	 *
+	 * @return the GridPane
+	 * @throws Exception the Exception
+	 */
 	private GridPane setUpScene() throws Exception{
 		GridPane root = new GridPane();
 		root.setPadding(new Insets(20));
@@ -58,7 +82,7 @@ public class WindowCreateRequest {
 		TextArea txaDescription = new TextArea();
 		TextArea txaNotes = new TextArea();
 		ListView<Technician> lsvTech = new ListView<Technician>(TechnicianList.get().getAll());
-		Button btnClose = new Button("Close");
+		Button btnClose = new Button("Cancel");
 		Button btnCreate = new Button("Create");
 		
 		InterfaceMethods methods = new InterfaceMethods();
