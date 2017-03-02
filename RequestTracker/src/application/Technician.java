@@ -5,7 +5,6 @@ import java.util.UUID;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Technician.
  * 
