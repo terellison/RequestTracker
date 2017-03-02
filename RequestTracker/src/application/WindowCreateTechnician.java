@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 
 /**
  * The Class WindowCreateTechnician.
+ * 
  * Creates a stage that will allow the
  * user to create a new Technician object.
  * Any blank fields will be acceptable input.
@@ -45,7 +46,9 @@ public class WindowCreateTechnician {
 	}
 	
 	/**
-	 * Show WindowCreateTechnician.
+	 * Show.
+	 * 
+	 * Calls showAndWait function of Stage.
 	 */
 	public void Show(){
 		stage.showAndWait();
@@ -108,7 +111,7 @@ public class WindowCreateTechnician {
 		methods.stageClose(btnClose, stage);
 		methods.btnCreateTech(
 				btnCreate, txfFirstName, txfLastName, 
-				txfIdNumber, stage);
+				txfIdNumber, stage, TechnicianList.get());
 		return root;
 	}
 	

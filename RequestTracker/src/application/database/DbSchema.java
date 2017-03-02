@@ -2,6 +2,7 @@ package application.database;
 
 /**
  * The Class DbSchema.
+ * 
  * Holds the names of the tables and columns used for the
  * database in the SQLiteJDBC class.
  * 
@@ -13,13 +14,17 @@ public class DbSchema {
 	
 	/**
 	 * The Class RequestTable.
+	 * 
 	 * Holds the names of the request table and the columns.
 	 */
 	public static final class RequestTable{
+		
+		/** The Constant NAME of request table. */
 		public static final String NAME = "request";		
 		
 		/**
 		 * The Class Cols.
+		 * 
 		 * Holds the names of the columns.
 		 */
 		public static final class Cols{
@@ -36,13 +41,17 @@ public class DbSchema {
 	
 	/**
 	 * The Class TechnicianTable.
+	 * 
 	 * Holds the names of the technician table and the columns.
 	 */
 	public static final class TechnicianTable{
+		
+		/** The Constant NAME of technician table. */
 		public static final String NAME = "technician";	
 		
 		/**
 		 * The Class Cols.
+		 * 
 		 * Holds the names of the columns.
 		 */
 		public static final class Cols{

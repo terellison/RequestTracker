@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 
 /**
  * The Class TechnicianList.
+ * 
  * Keeps track of the Technician objects.
  * Is the intermediary between Main.java and 
  * SQLiteJDBC.java
@@ -34,6 +35,7 @@ public class TechnicianList {
 	/**
 	 * Instantiates a new TechnicianList.
 	 *
+	 * @see SQLiteJDBC#createTechTable()
 	 * @throws Exception the Exception
 	 */
 	private TechnicianList() throws Exception{
@@ -43,7 +45,8 @@ public class TechnicianList {
 	
 	/**
 	 * Adds technician.
-	 *
+	 * 
+	 * @see SQLiteJDBC#insertTechTable(Technician)
 	 * @param t the Technician
 	 * @throws Exception the Exception
 	 */
@@ -54,6 +57,7 @@ public class TechnicianList {
 	/**
 	 * Edits technician.
 	 *
+	 * @see SQLiteJDBC#updateTechTable(Technician)
 	 * @param t the Technician
 	 * @throws Exception the Exception
 	 */
@@ -64,6 +68,7 @@ public class TechnicianList {
 	/**
 	 * Deletes technician.
 	 *
+	 * @see SQLiteJDBC#deleteOneTechTable(UUID)
 	 * @param t the Technician
 	 * @throws Exception the Exception
 	 */
@@ -74,6 +79,7 @@ public class TechnicianList {
 	/**
 	 * Delete all technicians.
 	 *
+	 * @see SQLiteJDBC#deleteAllTechTable()
 	 * @throws Exception the Exception
 	 */
 	public void deleteAll() throws Exception{
@@ -81,13 +87,13 @@ public class TechnicianList {
 	}
 	
 	/**
-	 * Gets one tech.
+	 * Gets one technician.
 	 *
+	 * @see SQLiteJDBC#getOneTechTable(UUID)
 	 * @param uuid the UUID
-	 * @return the tech
+	 * @return the technician
 	 * @throws Exception the Exception
 	 */
-	/* Getters */	
 	public Technician getTech(UUID uuid) throws Exception{
 		return database.getOneTechTable(uuid);
 	}
@@ -95,6 +101,7 @@ public class TechnicianList {
 	/**
 	 * Gets all technicians.
 	 *
+	 * @see SQLiteJDBC#getAllTechTable()
 	 * @return the technician list
 	 * @throws Exception the Exception
 	 */
@@ -103,8 +110,9 @@ public class TechnicianList {
 	}
 	
 	/**
-	 * Prints all techs.
+	 * Prints all technicians.
 	 *
+	 * @see SQLiteJDBC#printAllTechs()
 	 * @return the string
 	 * @throws Exception the Exception
 	 */
@@ -113,9 +121,12 @@ public class TechnicianList {
 	}
 	
 	/**
-	 * Search tech list.
+	 * Search technician list.
+	 * 
+	 * Searches for a technician in the database and returns
+	 * their position in the list.
 	 *
-	 * @param uuid the uuid
+	 * @param uuid the UUID
 	 * @return the int
 	 * @throws Exception the Exception
 	 */

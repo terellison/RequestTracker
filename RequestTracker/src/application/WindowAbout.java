@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 
 /**
  * The Class WindowAbout.
+ * 
  * Creates a stage that will show
  * an About message with basic info 
  * about the creator of the program.
@@ -40,7 +41,9 @@ public class WindowAbout {
 	}
 	
 	/**
-	 * Show WindowAbout.
+	 * Show.
+	 * 
+	 * Calls showAndWait function of Stage.
 	 */
 	public void Show(){
 		stage.showAndWait();

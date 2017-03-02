@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 
 /**
  * The Class WindowCreateRequest.
+ * 
  * Creates a stage that will allow the
  * user to create a new Request object.
  * Any blank fields will be acceptable input.
@@ -49,7 +50,9 @@ public class WindowCreateRequest {
 	}
 	
 	/**
-	 * Show WindowCreateRequest.
+	 * Show.
+	 * 
+	 * Calls showAndwait function of Stage.
 	 */
 	public void Show(){
 		stage.showAndWait();
@@ -144,7 +147,7 @@ public class WindowCreateRequest {
 		methods.btnCreateRequest(
 				btnCreate, dtpRequested, dtpCompleted, 
 				chkCompleted, txaDescription, txaNotes, 
-				lsvTech, stage);
+				lsvTech, stage, RequestList.get());
 		
 		return root;
 	}

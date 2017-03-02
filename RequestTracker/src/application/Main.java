@@ -38,11 +38,17 @@ import javafx.scene.layout.VBox;
 
 /**
  * The Class Main.
+ * 
  * This is where the entire program starts. Its main components are
  * the menu bar, toolbar, tabpane, and splitpanes.
  * 
+ * Focuses of the placement of nodes and their graphics. All
+ * action methods are separated into another class that is called
+ * frequently in this class.
+ * 
  * @author Chaz-Rae L. Moncrieffe
  * @since 3/1/2017
+ * @see InterfaceMethods
  */
 /*
  * Table of Contents
@@ -69,9 +75,10 @@ import javafx.scene.layout.VBox;
  *		2.8 MenuItem Delete All Techs
  *		2.9 MenuItem About
  *		2.10 MenuItem Exit
- *		2.11 Add MenuItems to SubMenus
- *		2.12 Add SubMenus and MenuItems to Menus
- *		2.13 Add Menus to MenuBar
+ *		2.11 MenuItem Export
+ *		2.12 Add MenuItems to SubMenus
+ *		2.13 Add SubMenus and MenuItems to Menus
+ *		2.14 Add Menus to MenuBar
  *	3.0 Toolbar
  *		3.1 New Request
  *		3.2 New Tech
@@ -177,14 +184,16 @@ public class Main extends Application {
 		Menu mnHelp = new Menu("Help");
 		Menu mnEdit = new Menu("Edit");
 		Menu submnNew = new Menu("New");
+		Menu submnPrint = new Menu("Save");
+		Menu submnExport = new Menu("Export");
 		Menu submnDelete = new Menu("Delete");
 		MenuItem mniNewRequest = new MenuItem("Request");
 		MenuItem mniNewTech = new MenuItem("Technician");
-		Menu submnPrint = new Menu("Save");
 		MenuItem mniPrintAllRequests = new MenuItem("All Requests");
 		MenuItem mniPrintOpenRequests = new MenuItem("Open Requests");
 		MenuItem mniPrintClosedRequests = new MenuItem("Completed Requests");
 		MenuItem mniPrintAllTechs = new MenuItem("All Technicians");
+		MenuItem mniExport = new MenuItem("Database to SQL");
 		MenuItem mniExit = new MenuItem("Exit");
 		MenuItem mniDeleteAllRequests = new MenuItem("All Requests");
 		MenuItem mniDeleteAllTechs = new MenuItem("All Technicians");
@@ -288,17 +297,22 @@ public class Main extends Application {
 		// 2.10 MenuItem Exit
 		mniExit.setAccelerator(new KeyCodeCombination(KeyCode.X, KeyCombination.CONTROL_DOWN));
 		
-		// 2.11 Add MenuItems to SubMenus
+		// 2.11 MenuItem Export
+		mniExport.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN));
+		mniExport.setGraphic(new ImageView(getClass().getResource("images/Export-16.png").toExternalForm()));
+		
+		// 2.12 Add MenuItems to SubMenus
 		submnNew.getItems().addAll(mniNewRequest, mniNewTech);
 		submnPrint.getItems().addAll(mniPrintAllRequests, mniPrintAllTechs, mniPrintOpenRequests, mniPrintClosedRequests);
+		submnExport.getItems().add(mniExport);
 		submnDelete.getItems().addAll(mniDeleteAllRequests, mniDeleteAllTechs);
 
-		// 2.12 Add SubMenus and MenuItems to Menus
-		mnFile.getItems().addAll(submnNew, submnPrint, new SeparatorMenuItem(), mniExit);
+		// 2.13 Add SubMenus and MenuItems to Menus
+		mnFile.getItems().addAll(submnNew, submnPrint, new SeparatorMenuItem(), submnExport,  new SeparatorMenuItem(), mniExit);
 		mnEdit.getItems().add(submnDelete);
 		mnHelp.getItems().add(mniAbout);
 		
-		// 2.13 Add Menus to MenuBar 
+		// 2.14 Add Menus to MenuBar 
 		mnbMain.getMenus().addAll(mnFile, mnEdit, mnHelp);
 		
 		/************ 3.0 ToolBar ************/
@@ -560,8 +574,8 @@ public class Main extends Application {
 		methods.objPrintClosedRequests(btnPrintClosedRequests, fileChooser, primaryStage, requestList);
 		
 		methods.mniAbout(mniAbout, primaryStage);
-		
 		methods.mniExit(mniExit, database, primaryStage);
+		methods.mniExport(mniExport, fileChooser, primaryStage, requestList);
 		
 		methods.objDeleteAllRequests(
 				mniDeleteAllRequests, dtpRequested, 

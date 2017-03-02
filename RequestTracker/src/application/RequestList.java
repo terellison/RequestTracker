@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 
 /**
  * The Class RequestList.
+ * 
  * Keeps track of the Request objects and
  * their request numbers. Is the intermediary
  * between Main.java and SQLiteJDBC.java.
@@ -36,7 +37,8 @@ public class RequestList {
 	
 	/**
 	 * Instantiates a new RequestList.
-	 *
+	 * 
+	 * @see SQLiteJDBC#createRequestTable()
 	 * @throws Exception the Exception
 	 */
 	private RequestList() throws Exception{
@@ -48,7 +50,19 @@ public class RequestList {
 
 	/**
 	 * Adds request.
+	 * 
+	 * Searches the requestIds list for the value
+	 * of i. If it is not found, the id of the request
+	 * is set to i and the request is inserted into the
+	 * database.
+	 * 
+	 * If all values of i up to, and including count, are
+	 * found in the requestIds list, then ++count is set
+	 * as the request id. count is then added to the 
+	 * requestIds list and the request is inserted into
+	 * the database.
 	 *
+	 * @see SQLiteJDBC#insertRequestTable(Request)
 	 * @param r the Request
 	 * @throws Exception the Exception
 	 */
@@ -69,6 +83,7 @@ public class RequestList {
 	/**
 	 * Edits request.
 	 *
+	 * @see SQLiteJDBC#updateRequestTable(Request)
 	 * @param r the Request
 	 * @throws Exception the Exception
 	 */
@@ -78,7 +93,11 @@ public class RequestList {
 	
 	/**
 	 * Deletes request.
+	 * 
+	 * Deletes the Integer object of the request id
+	 * from the requestIds list.
 	 *
+	 * @see SQLiteJDBC#deleteOneRequestTable(java.util.UUID)
 	 * @param r the Request
 	 * @throws Exception the Exception
 	 */
@@ -90,6 +109,7 @@ public class RequestList {
 	/**
 	 * Deletes all requests.
 	 *
+	 * @see SQLiteJDBC#deleteAllRequestTable()
 	 * @throws Exception the Exception
 	 */
 	public void deleteAll() throws Exception{
@@ -99,6 +119,13 @@ public class RequestList {
 	/**
 	 * Gets all requests.
 	 *
+	 * Gets the request ids of the requests in the
+	 * database and adds them to the instance list.
+	 * 
+	 * Sets the instance count variable to the highest
+	 * request id value.
+	 *
+	 * @see SQLiteJDBC#getAllRequestTable()
 	 * @return the request list
 	 * @throws Exception the Exception
 	 */
@@ -121,6 +148,7 @@ public class RequestList {
 	/**
 	 * Prints all requests.
 	 *
+	 * @see SQLiteJDBC#printAllRequests()
 	 * @return the string
 	 * @throws Exception the Exception
 	 */
@@ -131,6 +159,7 @@ public class RequestList {
 	/**
 	 * Prints open requests.
 	 *
+	 * @see SQLiteJDBC#printOpenRequests()
 	 * @return the string
 	 * @throws Exception the Exception
 	 */
@@ -141,10 +170,23 @@ public class RequestList {
 	/**
 	 * Prints closed requests.
 	 *
+	 * @see SQLiteJDBC#printClosedRequests()
 	 * @return the string
 	 * @throws Exception the Exception
 	 */
 	public String printClosedRequests() throws Exception{
 		return database.printClosedRequests();
+	}
+	
+	/**
+	 * Prints table schema and insert statements as SQL commands
+	 * 
+	 * @see SQLiteJDBC#exportTableData()
+	 * @return the string
+	 * @throws Exception the Exception
+	 */
+	
+	public String exportTableData() throws Exception{
+		return database.exportTableData();
 	}
 }

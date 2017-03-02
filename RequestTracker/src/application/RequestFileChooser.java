@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 
 /**
  * The Class RequestFileChooser.
+ * 
  * Provides a static FileChooser object to be
  * used throughout the program in order to keep the settings
  * of the current FileChooser session. 
@@ -33,12 +34,16 @@ public class RequestFileChooser {
 	
 	/**
 	 * Instantiates a new RequestFileChooser.
+	 * 
+	 * Adds extension filters to the FileChooser object and
+	 * sets the initial directory.
 	 */
 	private RequestFileChooser(){
 		fileChooser = new FileChooser();
 		ExtensionFilter textFilter = new ExtensionFilter("TXT files (*.txt)", "*.txt");
-		ExtensionFilter wordFilter = new ExtensionFilter("All files (*.*)", ".*");
-		fileChooser.getExtensionFilters().addAll(textFilter, wordFilter);
+		ExtensionFilter allFilter = new ExtensionFilter("All files (*.*)", ".*");
+		ExtensionFilter sqlFilter = new ExtensionFilter("SQL files (*.sql)", "*.sql");
+		fileChooser.getExtensionFilters().addAll(textFilter, sqlFilter, allFilter);
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 	
 	}

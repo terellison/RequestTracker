@@ -46,10 +46,11 @@ import javafx.util.Callback;
  *		1.4 Print Open Requests
  *		1.5 Print Closed Requests
  *		1.6 Print All Techs
- *		1.7 About MenuItem
- *		1.8 Exit MenuItem
- *		1.9 Delete All Requests
- *		1.10 Delete All Technicians
+ *		1.7 Export
+ *		1.8 About MenuItem
+ *		1.9 Exit MenuItem
+ *		1.10 Delete All Requests
+ *		1.11 Delete All Technicians
  *	2.0 Form Buttons
  *		2.1 Save Request Changes
  *		2.2 Save Tech Changes
@@ -89,6 +90,10 @@ public class InterfaceMethods {
 	/**
 	 * 1.1 New Request
 	 * 
+	 * Checks the class of the object and casts appropriately.
+	 * Sets the object to show a WindowCreateRequest stage.
+	 * 
+	 * @see WindowCreateRequest
 	 * @param obj the Object
 	 * @param stage the Stage
 	 * @param tbvR the TableView
@@ -124,6 +129,10 @@ public class InterfaceMethods {
 	/**
 	 * 1.2 New Tech
 	 *
+	 * Checks the class of the object and casts appropriately.
+	 * Sets the object to show a WindowCreateTechnician stage
+	 *
+	 * @see WindowCreateTechnician
 	 * @param obj the Object
 	 * @param stage the Stage
 	 * @param tbvT the TableView
@@ -160,6 +169,12 @@ public class InterfaceMethods {
 	/**
 	 * 1.3 Print All Requests.
 	 *
+	 * Checks the class of the object and casts appropriately.
+	 * Sets the object to show a RequestFileChooser, then saves the file.
+	 *
+	 * @see RequestFileChooser
+	 * @see RequestList#printAllRequests()
+	 * @see #SaveFile(String, File, Stage)
 	 * @param obj the Object
 	 * @param fch the RequestFileChooser
 	 * @param stage the Stage
@@ -205,6 +220,12 @@ public class InterfaceMethods {
 	/**
 	 * 1.4 Print Open Requests.
 	 *
+	 * Checks the class of the object and casts appropriately.
+	 * Sets the object to show a RequestFileChooser, then saves the file.
+	 *
+	 * @see RequestFileChooser
+	 * @see RequestList#printOpenRequests()
+	 * @see #SaveFile(String, File, Stage)
 	 * @param obj the Object
 	 * @param fch the RequestFileChoosed
 	 * @param stage the Stage
@@ -250,7 +271,13 @@ public class InterfaceMethods {
 	
 	/**
 	 * 1.5 Print Closed Requests.
+	 * 
+	 * Checks the class of the object and casts appropriately.
+	 * Sets the object to show a RequestFileChooser, then saves the file.
 	 *
+	 * @see RequestFileChooser
+	 * @see RequestList#printClosedRequests()
+	 * @see #SaveFile(String, File, Stage) 
 	 * @param obj the Object
 	 * @param fch the RequestFileChooser
 	 * @param stage the Stage
@@ -295,7 +322,13 @@ public class InterfaceMethods {
 	
 	/**
 	 * 1.6 Print All Techs.
+	 * 
+	 * Checks the class of the object and casts appropriately.
+	 * Sets the object to show a RequestFileChooser, then saves the file.
 	 *
+	 * @see RequestFileChooser
+	 * @see TechnicianList#printAllTechs()
+	 * @see #SaveFile(String, File, Stage)
 	 * @param obj the Object
 	 * @param fch the RequestFileChooser
 	 * @param stage the Stage
@@ -339,8 +372,42 @@ public class InterfaceMethods {
 	}
 	
 	/**
-	 * 1.7 About
+	 * 1.7 Export
+	 * 
+	 * Sets the MenuItem to show a RequestFileChooser, then saves the file.
+	 * 
+	 * @see RequestFileChooser
+	 * @see RequestList#exportTableData()
+	 * @see #SaveFile(String, File, Stage)
+	 * @param mni the MenuItem
+	 * @param fch the RequestFileChooser
+	 * @param stage the Stage
+	 * @param rList the RequestList
+	 */
+	public void mniExport(MenuItem mni, RequestFileChooser fch, Stage stage, RequestList rList){
+		mni.setOnAction(e -> {
+			try{
+				fch.setTitle("Export Database");
+				fch.setInitialFileName("request_tracker");
+				
+				File file = fch.showSaveDialog(stage);
+				if(file != null){
+					SaveFile(rList.exportTableData(), file, stage);
+				}
+			}
+			catch(Exception e1){
+				
+			}
+		});
+
+	}
+	
+	/**
+	 * 1.8 About
+	 * 
+	 * Sets the MenuItem to show a WindowAbout stage.
 	 *
+	 * @see WindowAbout
 	 * @param mni the MenuItem
 	 * @param stage the Stage
 	 */
@@ -352,8 +419,13 @@ public class InterfaceMethods {
 	}
 	
 	/**
-	 * 1.8 Exit
+	 * 1.9 Exit
+	 * 
+	 * Sets the MenuItem to show an alert confirmation
+	 * dialog and close the database and program if
+	 * confirmed.
 	 *
+	 * @see SQLiteJDBC#closeDbConnection()
 	 * @param mni the MenuItem
 	 * @param sql the SQLiteJDBC
 	 * @param stage the Stage
@@ -380,8 +452,13 @@ public class InterfaceMethods {
 	}
 	
 	/**
-	 * 1.9 Delete All Requests
+	 * 1.10 Delete All Requests
+	 * 
+	 * Checks the class of the object and casts appropriately.
+	 * Sets the object to show an alert confirmation dialog and 
+	 * delete all requests and resets controls if confirmed.
 	 *
+	 * @see RequestList#deleteAll()
 	 * @param obj the Object
 	 * @param dtpReq the DatePicker
 	 * @param dtpCom the DatPicker
@@ -458,8 +535,13 @@ public class InterfaceMethods {
 	}
 	
 	/**
-	 * 1.10 Delete All Technicians
+	 * 1.11 Delete All Technicians
+	 * 
+	 * Checks the class of the object and casts appropriately.
+	 * Sets the object to show an alert confirmation dialog and 
+	 * delete all technicians and resets controls if confirmed.
 	 *
+	 * @see TechnicianList#deleteAll()
 	 * @param obj the Object
 	 * @param rList the RequestList
 	 * @param tList the TechnicianList
@@ -533,6 +615,12 @@ public class InterfaceMethods {
 	/**
 	 * 2.1 Save Request Changes
 	 *
+	 * Gets the values from the controls.
+	 * If the DatePickers are null, it sets an empty
+	 * string. If no technician is chosen, it sets a 
+	 * new technician not in the database.
+	 * 
+	 * @see RequestList#editRequest(Request)
 	 * @param btn the Button
 	 * @param tbvR the TableView
 	 * @param lsvT the ListView
@@ -565,7 +653,7 @@ public class InterfaceMethods {
 					case -1:	r.setRequested(dtp1.toString());
 								r.setCompleted(dtp2.toString());
 								r.setDescription(txaDes.getText());
-								r.setTechId(new Technician("n/a", "n/a", "n/a").getUUID());
+								r.setTechId(new Technician("", "", "").getUUID());
 								r.setNotes(txaNot.getText());
 								r.setIsCompleted(chkCom.isSelected());
 								break;
@@ -587,7 +675,10 @@ public class InterfaceMethods {
 	
 	/**
 	 * 2.2 Save Tech Changes
+	 * 
+	 * Gets the values from the controls.
 	 *
+	 * @see TechnicianList#editTechnician(Technician)
 	 * @param btn the Button
 	 * @param txfFir the TextField
 	 * @param txfLas the TextField
@@ -625,6 +716,10 @@ public class InterfaceMethods {
 	/**
 	 * 2.3 Delete Request
 	 *
+	 * Shows an alert confirmation dialog and deletes request
+	 * chosen from table and resets controls if confirmed.
+	 *
+	 * @see RequestList#deleteRequest(Request)
 	 * @param btn the Button
 	 * @param tbvR the TableView
 	 * @param lsvT the ListView
@@ -669,6 +764,10 @@ public class InterfaceMethods {
 	/**
 	 * 2.4 Delete Tech
 	 *
+	 * Shows an alert confirmation dialog and deletes technician
+	 * chosen from table and resets controls if confirmed.
+	 *
+	 * @see TechnicianList#deleteTechnician(Technician)
 	 * @param btn the Button
 	 * @param txfFir the TextField
 	 * @param txfLas the TextField
@@ -713,7 +812,13 @@ public class InterfaceMethods {
 	
 	/**
 	 * 2.5 Create Request
+	 * 
+	 * Gets the values from the controls.
+	 * If the DatePickers are null, it sets an empty
+	 * string. If no technician is chosen, it sets a 
+	 * new technician not in the database.
 	 *
+	 * @see RequestList#addRequest(Request)
 	 * @param btn the Button
 	 * @param dtpReq the DatePicker
 	 * @param dtpCom the DatePicker
@@ -722,11 +827,12 @@ public class InterfaceMethods {
 	 * @param txaNot the TextArea
 	 * @param lsvT the ListView
 	 * @param stage the Stage
+	 * @param rList the RequestList
 	 */
 	public void btnCreateRequest(
 			Button btn, DatePicker dtpReq, DatePicker dtpCom,
 			CheckBox chkCom, TextArea txaDes, TextArea txaNot, 
-			ListView<Technician> lsvT, Stage stage){
+			ListView<Technician> lsvT, Stage stage, RequestList rList){
 		btn.setOnAction(e -> {
 			try{
 				int techIndex = lsvT.getSelectionModel().getSelectedIndex();
@@ -742,8 +848,8 @@ public class InterfaceMethods {
 				}
 				
 				switch(techIndex){
-					case -1:	t = new Technician("n/a/", "n/a", "n/a");
-								RequestList.get()
+					case -1:	t = new Technician("", "", "");
+								rList
 									.addRequest(new Request(
 											requestedDate.toString(),
 											completedDate.toString(),
@@ -751,11 +857,11 @@ public class InterfaceMethods {
 											t.getUUID(),
 											txaNot.getText(),
 											chkCom.isSelected()
-									));
+								));
 								break;
 					default:	t = TechnicianList.get().getAll().get(techIndex);
-								RequestList.get()
-								.addRequest(new Request(
+								rList
+									.addRequest(new Request(
 										requestedDate.toString(),
 										completedDate.toString(),
 										txaDes.getText(),
@@ -775,19 +881,23 @@ public class InterfaceMethods {
 	
 	/**
 	 * 2.6 Create Tech
+	 * 
+	 * Gets values from controls.
 	 *
+	 * @see TechnicianList#addTechnician(Technician)
 	 * @param btn the Button
 	 * @param txfFir the TextField
 	 * @param txfLas the TextField
 	 * @param txfId the TextField
 	 * @param stage the Stage
+	 * @param tList the TechnicianList
 	 */
 	public void btnCreateTech(
 			Button btn, TextField txfFir, TextField txfLas, 
-			TextField txfId, Stage stage){
+			TextField txfId, Stage stage, TechnicianList tList){
 		btn.setOnAction(e -> {
 			try{
-				TechnicianList.get()
+				tList
 					.addTechnician(new Technician(
 							txfFir.getText(), 
 							txfLas.getText(), 
@@ -805,6 +915,10 @@ public class InterfaceMethods {
 	/**
 	 * 3.1 Primary Stage Close Request
 	 *
+	 * Sets the program to close database when exited through
+	 * "X" button in top-right corner.
+	 * 
+	 * @see SQLiteJDBC#closeDbConnection()
 	 * @param stage the Stage
 	 * @param data the SQLiteJDBC
 	 */
