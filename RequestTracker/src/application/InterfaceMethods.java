@@ -174,7 +174,7 @@ public class InterfaceMethods {
 					
 					File file = fch.showSaveDialog(stage);
 					if(file != null){
-						SaveFile(rList.printAllRequests(), file);
+						SaveFile(rList.printAllRequests(), file,stage);
 					}
 				}
 				catch(Exception e1){
@@ -191,7 +191,7 @@ public class InterfaceMethods {
 					
 					File file = fch.showSaveDialog(stage);
 					if(file != null){
-						SaveFile(rList.printAllRequests(), file);
+						SaveFile(rList.printAllRequests(), file,stage);
 					}
 				}
 				catch(Exception e1){
@@ -219,7 +219,7 @@ public class InterfaceMethods {
 					
 					File file = fch.showSaveDialog(stage);
 					if(file != null){
-						SaveFile(rList.printOpenRequests(), file);
+						SaveFile(rList.printOpenRequests(), file,stage);
 					}
 				}
 				catch(Exception e1){
@@ -236,7 +236,7 @@ public class InterfaceMethods {
 					
 					File file = fch.showSaveDialog(stage);
 					if(file != null){
-						SaveFile(rList.printOpenRequests(), file);
+						SaveFile(rList.printOpenRequests(), file, stage);
 					}
 				}
 				catch(Exception e1){
@@ -265,7 +265,7 @@ public class InterfaceMethods {
 					
 					File file = fch.showSaveDialog(stage);
 					if(file != null){
-						SaveFile(rList.printClosedRequests(), file);
+						SaveFile(rList.printClosedRequests(), file,stage);
 					}
 				}
 				catch(Exception e1){
@@ -282,7 +282,7 @@ public class InterfaceMethods {
 					
 					File file = fch.showSaveDialog(stage);
 					if(file != null){
-						SaveFile(rList.printClosedRequests(), file);
+						SaveFile(rList.printClosedRequests(), file, stage);
 					}
 				}
 				catch(Exception e1){
@@ -310,7 +310,7 @@ public class InterfaceMethods {
 					
 					File file = fch.showSaveDialog(stage);
 					if(file != null){
-						SaveFile(tList.printAllTechs(), file);
+						SaveFile(tList.printAllTechs(), file, stage);
 					}
 				}
 				catch(Exception e1){
@@ -327,7 +327,7 @@ public class InterfaceMethods {
 					
 					File file = fch.showSaveDialog(stage);
 					if(file != null){
-						SaveFile(tList.printAllTechs(), file);
+						SaveFile(tList.printAllTechs(), file, stage);
 					}
 				}
 				catch(Exception e1){
@@ -1237,8 +1237,9 @@ public class InterfaceMethods {
 	 * 
 	 * @param content the String
 	 * @param file the File
+	 * @param stage the Stage
 	 */
-	private void SaveFile(String content, File file){
+	private void SaveFile(String content, File file, Stage stage){
         try  (BufferedWriter bw = new BufferedWriter(new FileWriter(file))){
         	StringBuilder line = new StringBuilder();
         	for(int a = 0; a < content.length(); a++){
@@ -1260,7 +1261,8 @@ public class InterfaceMethods {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Cannot Access File");
 			alert.setContentText("The application cannot access the file because it is being used by another process. Please close the file and try again.");
-
+			alert.initOwner(stage);
+			
 			alert.showAndWait();
 		}
         catch (Exception e) {
