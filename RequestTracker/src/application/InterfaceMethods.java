@@ -24,7 +24,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TableColumn.CellDataFeatures;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -934,6 +933,9 @@ public class InterfaceMethods {
 	
 	/**
 	 * 3.2 Stage Close
+	 * 
+	 * Sets the window to show an alert confirmation
+	 * and closes the stage if confirmed.
 	 *
 	 * @param btn the Button
 	 * @param stage the Stage
@@ -956,6 +958,10 @@ public class InterfaceMethods {
 	/********** 4.0 Listeners **********/
 	/**
 	 * 4.1 Request Table
+	 * 
+	 * Sets the controls in the details pane
+	 * to show the data from the selected request
+	 * in the request table.
 	 *
 	 * @param tbvR the TableView
 	 * @param dtpReq the DatePicker
@@ -1016,6 +1022,10 @@ public class InterfaceMethods {
 	/**
 	 * 4.2 Tech Table
 	 *
+	 * Sets the controls in the details pane
+	 * to show the data from the selected technician
+	 * in the technician table.
+	 *
 	 * @param tbvT the TableView
 	 * @param txfFir the TextField
 	 * @param txfLas the TextField
@@ -1049,6 +1059,11 @@ public class InterfaceMethods {
 	/**
 	 * 4.3 CheckBox
 	 *
+	 * If the CheckBox is selected, the disabled
+	 * property of the DatePicker is set to false.
+	 * If the CheckBox is selecter, the disabled 
+	 * property of the DatePicker is set to true.
+	 *
 	 * @param chk the CheckBox
 	 * @param dtp the DatePicker
 	 */
@@ -1067,6 +1082,10 @@ public class InterfaceMethods {
 	
 	/**
 	 * 4.4 TextField
+	 * 
+	 * Doesn't enable characters other than
+	 * the numbers 0 - 9 to be accepted into
+	 * the TextField.
 	 *
 	 * @param txf the TextField
 	 */
@@ -1082,6 +1101,9 @@ public class InterfaceMethods {
 	/********** 5.0 Cell Values ***********/
 	/**
 	 * 5.1 Date Requested Column
+	 * 
+	 * If the value of the property is "", it'll show
+	 * "n/a". Otherwise, it'll show the text in the property.
 	 *
 	 * @param col the TableColumn
 	 */
@@ -1104,6 +1126,9 @@ public class InterfaceMethods {
 	
 	/**
 	 * 5.2 Date Completed Column
+	 * 
+	 * If the value of the property is "", it'll show
+	 * "n/a". Otherwise, it'll show the text in the property.
 	 *
 	 * @param col the TableColumn
 	 */
@@ -1126,6 +1151,9 @@ public class InterfaceMethods {
 	
 	/**
 	 * 5.3 Description Column
+	 * 
+	 * If the value of the property is "", it'll show
+	 * "n/a". Otherwise, it'll show the text in the property.
 	 *
 	 * @param col the TableColumn
 	 */
@@ -1148,6 +1176,9 @@ public class InterfaceMethods {
 	
 	/**
 	 * 5.4 Tech Id Column
+	 * 
+	 * If the value of the property is "", it'll show
+	 * "n/a". Otherwise, it'll show the text in the property.
 	 *
 	 * @param col the TableColumn
 	 * @param tList the TechnicianList
@@ -1173,6 +1204,9 @@ public class InterfaceMethods {
 	
 	/**
 	 * 5.5 Tech Name Column
+	 * 
+	 * If the value of the property is "", it'll show
+	 * "n/a". Otherwise, it'll show the text in the property.
 	 *
 	 * @param col the TableColumn
 	 * @param tList the TechnicianList
@@ -1200,6 +1234,9 @@ public class InterfaceMethods {
 	
 	/**
 	 * 5.6 Notes Column
+	 * 
+	 * If the value of the property is "", it'll show
+	 * "n/a". Otherwise, it'll show the text in the property.
 	 *
 	 * @param col the TableColumn
 	 */
@@ -1222,6 +1259,9 @@ public class InterfaceMethods {
 	
 	/**
 	 * 5.7 Is Completed Column
+	 * 
+	 * If the property value is true, it'll show "Yes".
+	 * Otherwise, it'll show "No".
 	 *
 	 * @param col the TableColumn
 	 */
@@ -1244,6 +1284,8 @@ public class InterfaceMethods {
 	
 	/**
 	 * 5.8 Request Id Column
+	 * 
+	 * It casts the property value to a String and shows it.
 	 *
 	 * @param col the TableColumn
 	 */
@@ -1261,6 +1303,11 @@ public class InterfaceMethods {
 	
 	/**
 	 * 5.9 Technician ListView.
+	 * 
+	 * If the List is empty or the Technician is null,
+	 * it sets an empty, unselectable space in its place.
+	 * Otherwise, it'll show the Technician first name and
+	 * last name.
 	 *
 	 * @param lsv the ListView
 	 */
@@ -1291,36 +1338,84 @@ public class InterfaceMethods {
 	/**
 	 *  5.10 First Name Column
 	 *  
+	 *  If the value of the property is "", it'll show
+	 * "n/a". Otherwise, it'll show the text in the property.
+	 *
 	 *  @param col the TableColumn
 	 */
 	public void firstName(TableColumn<Technician, String> col){
 		col.setMinWidth(150);
-		col.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+		col.setCellValueFactory(new Callback<CellDataFeatures<Technician, String>, ObservableValue<String>>(){
+
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Technician, String> data) {
+				if(data.getValue().getFirstName().equals("")){
+					return new SimpleStringProperty("n/a");
+				}
+				else{
+					return new SimpleStringProperty(data.getValue().getFirstName());
+				}
+			}
+			
+		});
 	}
 	
 	/**
 	 *  5.11 Last Name Column
 	 *  
+	 *  If the value of the property is "", it'll show
+	 * "n/a". Otherwise, it'll show the text in the property.
+	 *  
 	 *  @param col the TableColumn
 	 */
 	public void lastName(TableColumn<Technician, String> col){
 		col.setMinWidth(150);
-		col.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+		col.setCellValueFactory(new Callback<CellDataFeatures<Technician, String>, ObservableValue<String>>(){
+
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Technician, String> data) {
+				if(data.getValue().getLastName().equals("")){
+					return new SimpleStringProperty("n/a");
+				}
+				else{
+					return new SimpleStringProperty(data.getValue().getLastName());
+				}
+			}
+			
+		});
 	}
 	
 	/**
 	 *  5.12 ID Number Column
 	 *  
+	 *  If the value of the property is "", it'll show
+	 * "n/a". Otherwise, it'll show the text in the property.
+	 *  
 	 *  @param col the TableColumn
 	 */
 	public void idNumber(TableColumn<Technician, String> col){
 		col.setMinWidth(150);
-		col.setCellValueFactory(new PropertyValueFactory<>("idNumber"));
+		col.setCellValueFactory(new Callback<CellDataFeatures<Technician, String>, ObservableValue<String>>(){
+
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Technician, String> data) {
+				if(data.getValue().getIdNumber().equals("")){
+					return new SimpleStringProperty("n/a");
+				}
+				else{
+					return new SimpleStringProperty(data.getValue().getIdNumber());
+				}
+			}
+			
+		});
 	}
 	
 	/************ 6.0 Add TableColumns to TableView ************/
 	/**
 	 * 6.1 Add Request Columns
+	 *
+	 * Goes through an array of TableColumns
+	 * and adds them to the TableView.
 	 *
 	 * @param tbvR the TableView
 	 * @param columns the TableColumn[]
@@ -1335,6 +1430,9 @@ public class InterfaceMethods {
 	/**
 	 * 6.2 Add Technician Columns
 	 * 
+	 * Goes through an array of TableColumns
+	 * and adds them to the TableView.
+	 * 
 	 * @param tbvT the TableView
 	 * @param columns the TableColumn[]
 	 */
@@ -1348,6 +1446,12 @@ public class InterfaceMethods {
 	/********** 7.0 Private Helper Functions ***********/
 	/**
 	 * 7.1 Save File
+	 * 
+	 * Goes through the String content and writes
+	 * to the file at every newline character.
+	 * If a FileNotFound Exception happens, an alert
+	 * error will show on the screen and the file will
+	 * not be saved.
 	 * 
 	 * @param content the String
 	 * @param file the File

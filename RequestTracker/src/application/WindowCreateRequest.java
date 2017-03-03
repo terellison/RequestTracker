@@ -60,7 +60,11 @@ public class WindowCreateRequest {
 	
 	/**
 	 * Sets up  the scene.
+	 * 
+	 * Creates the controls and sets 
+	 * them in the GridPane
 	 *
+	 * @see InterfaceMethods
 	 * @return the GridPane
 	 * @throws Exception the Exception
 	 */

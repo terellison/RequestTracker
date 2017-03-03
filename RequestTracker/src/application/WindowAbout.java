@@ -51,6 +51,9 @@ public class WindowAbout {
 	
 	/**
 	 * Sets up the scene.
+	 * 
+	 * Creates controls and sets them
+	 * in the GridPane
 	 *
 	 * @return the GridPane
 	 */

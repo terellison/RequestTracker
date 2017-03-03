@@ -17,6 +17,7 @@ import javafx.collections.ObservableList;
 
 /**
  * The Class SQLiteJDBC.
+ * 
  * Holds all the methods for creating, reading,
  * updating, and deleting from the database and is meant to
  * be a single static instance.
@@ -172,6 +173,7 @@ public class SQLiteJDBC {
 	
 	/**
 	 * 2.2 Technician Insert
+	 * 
 	 * Inserts a technician into technician table.
 	 *
 	 * @param t the technician
@@ -502,8 +504,8 @@ public class SQLiteJDBC {
 	 * technician UUID and false isCompleted
 	 * ordered by the request ID number.
 	 *
-	 *  Formats report to account for multi-line descriptions
-	 *  and notes.
+	 * Formats report to account for multi-line descriptions
+	 * and notes.
 	 * 
 	 * @see #formatMultilineForReport(String)
 	 * @see #getAllTechIDs() 
@@ -573,8 +575,8 @@ public class SQLiteJDBC {
 	 * technician UUID and true isCompleted
 	 * ordered by the request ID number.
 	 *
-	 *  Formats report to account for multi-line descriptions
-	 *  and notes.
+	 * Formats report to account for multi-line descriptions
+	 * and notes.
 	 * 
 	 * @see #formatMultilineForReport(String)
 	 * @see #getAllTechIDs() 
