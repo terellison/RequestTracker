@@ -1060,9 +1060,9 @@ public class InterfaceMethods {
 	 * 4.3 CheckBox
 	 *
 	 * If the CheckBox is selected, the disabled
-	 * property of the DatePicker is set to false.
-	 * If the CheckBox is selecter, the disabled 
 	 * property of the DatePicker is set to true.
+	 * If the CheckBox is not selected, the disabled 
+	 * property of the DatePicker is set to false.
 	 *
 	 * @param chk the CheckBox
 	 * @param dtp the DatePicker
@@ -1071,10 +1071,10 @@ public class InterfaceMethods {
 			CheckBox chk, DatePicker dtp){
 		chk.selectedProperty().addListener((ov, oldV, newV) -> {
 			if(newV){
-				dtp.setDisable(!newV);
+				dtp.setDisable(newV);
 			}
 			else{
-				dtp.setDisable(!newV);
+				dtp.setDisable(newV);
 				dtp.setValue(null);
 			}
 		});
